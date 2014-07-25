@@ -15,7 +15,6 @@ shared_context 'zabbix::server::user' do
       :comment   => 'Zabbix Monitoring System -- Proxy or server',
       :gid       => 'zabbixsrv',
       :home      => '/var/lib/zabbixsrv',
-      :password  => '!!',
       :shell     => '/sbin/nologin',
       :uid       => nil,
       :system    => 'true',

@@ -15,6 +15,10 @@ env:
   - PUPPET_GEM_VERSION="~> 3.5.0"
   - PUPPET_GEM_VERSION="~> 3.6.0"
 matrix:
+  allow_failures:
+    - env: PUPPET_GEM_VERSION="~> 2.7.0"
+    - env: PUPPET_GEM_VERSION="~> 3.1.0"
+    - env: PUPPET_GEM_VERSION="~> 3.2.0"
   exclude:
     - rvm: 2.0.0
       env: PUPPET_GEM_VERSION="~> 3.1.0"
