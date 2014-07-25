@@ -1,0 +1,51 @@
+#
+# This file is managed by Puppet. DO NOT EDIT!
+#
+
+############ ADVANCED PARAMETERS ################
+
+StartPollers=<%= scope.lookupvar('zabbix::server::start_pollers') %>
+StartIPMIPollers=<%= scope.lookupvar('zabbix::server::start_ipmi_pollers') %>
+StartPollersUnreachable=<%= scope.lookupvar('zabbix::server::start_pollers_unreachable') %>
+StartTrappers=<%= scope.lookupvar('zabbix::server::start_trappers') %>
+StartPingers=<%= scope.lookupvar('zabbix::server::start_pingers') %>
+StartDiscoverers=<%= scope.lookupvar('zabbix::server::start_discoverers') %>
+StartHTTPPollers=<%= scope.lookupvar('zabbix::server::start_http_pollers') %>
+StartTimers=<%= scope.lookupvar('zabbix::server::start_timers') %>
+# JavaGateway=
+# JavaGatewayPort=10052
+# StartJavaPollers=0
+# StartVMwareCollectors=0
+# VMwareFrequency=60
+# VMwareCacheSize=8M
+# SNMPTrapperFile=/tmp/zabbix_traps.tmp
+StartSNMPTrapper=<%= scope.lookupvar('zabbix::server::start_snmp_trapper') ? '1' : '0' %>
+# ListenIP=0.0.0.0
+HousekeepingFrequency=<%= scope.lookupvar('zabbix::server::housekeeping_frequency') %>
+MaxHousekeeperDelete=<%= scope.lookupvar('zabbix::server::max_housekeeper_delete') %>
+SenderFrequency=<%= scope.lookupvar('zabbix::server::sender_frequency') %>
+CacheSize=<%= scope.lookupvar('zabbix::server::cache_size') %>
+CacheUpdateFrequency=<%= scope.lookupvar('zabbix::server::cache_update_frequency') %>
+StartDBSyncers=<%= scope.lookupvar('zabbix::server::start_db_syncers') %>
+HistoryCacheSize=<%= scope.lookupvar('zabbix::server::history_cache_size') %>
+TrendCacheSize=<%= scope.lookupvar('zabbix::server::trend_cache_size') %>
+HistoryTextCacheSize=<%= scope.lookupvar('zabbix::server::history_text_cache_size') %>
+ValueCacheSize=<%= scope.lookupvar('zabbix::server::value_cache_size') %>
+# NodeNoEvents=0
+# NodeNoHistory=0
+Timeout=<%= scope.lookupvar('zabbix::server::timeout') %>
+TrapperTimeout=<%= scope.lookupvar('zabbix::server::trapper_timeout') %>
+UnreachablePeriod=<%= scope.lookupvar('zabbix::server::unreachable_period') %>
+UnavailableDelay=<%= scope.lookupvar('zabbix::server::unavailable_delay') %>
+UnreachableDelay=<%= scope.lookupvar('zabbix::server::unreachable_delay') %>
+AlertScriptsPath=<%= scope.lookupvar('zabbix::server::alert_scripts_path') %>
+ExternalScripts=<%= scope.lookupvar('zabbix::server::external_scripts') %>
+# FpingLocation=/usr/sbin/fping
+# Fping6Location=/usr/sbin/fping6
+# SSHKeyLocation=
+# LogSlowQueries=0
+TmpDir=<%= scope.lookupvar('zabbix::server::tmp_dir') %>
+# StartProxyPollers=1
+# ProxyConfigFrequency=3600
+# ProxyDataFrequency=1
+# AllowRoot=0
