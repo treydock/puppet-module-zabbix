@@ -1,12 +1,8 @@
 require 'spec_helper'
 
 describe 'zabbix::database::mysql' do
-  let :facts do
-    {
-      :osfamily   => 'RedHat',
-      :root_home  => '/root',
-    }
-  end
+  include_context :defaults
+  let(:facts) { default_facts }
 
   it { should create_class('zabbix::database::mysql') }
   it { should contain_class('zabbix::params') }

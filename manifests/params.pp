@@ -56,6 +56,13 @@ class zabbix::params {
 
   case $::osfamily {
     'RedHat': {
+      $purge_conflicting_packages = false
+      if $::operatingsystemmajrelease >= 7 {
+        $conflicting_packages     = ['zabbix20']
+      } else {
+        $conflicting_packages     = ['zabbix20','zabbix']
+      }
+
       # agent defaults
       $agent_package_name         = 'zabbix-agent'
       $agent_service_name         = 'zabbix-agent'

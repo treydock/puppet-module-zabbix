@@ -70,6 +70,8 @@ class zabbix::server (
   #validate_re($db_type, ['^mysql$','^pgsql$','^sqlite$'])
   validate_re($db_type, ['^mysql$'])
 
+  include ::zabbix
+
   if $manage_database {
     class { "zabbix::database::${db_type}":
       package_ensure  => $package_ensure,
@@ -81,16 +83,25 @@ class zabbix::server (
       schema_sql_path => $schema_sql_path,
       images_sql_path => $images_sql_path,
       data_sql_path   => $data_sql_path,
-      before          => Class['zabbix::server::config'],
     }
-  }
 
-  anchor { 'zabbix::server::start': }->
-  class { 'zabbix::server::user': }->
-  class { 'zabbix::server::install': }->
-  class { 'zabbix::server::config': }~>
-  class { 'zabbix::server::service': }->
-  anchor { 'zabbix::server::end': }
+    anchor { 'zabbix::server::start': }->
+    Class['zabbix']->
+    class { 'zabbix::server::user': }->
+    class { 'zabbix::server::install': }->
+    Class["zabbix::database::${db_type}"]->
+    class { 'zabbix::server::config': }~>
+    class { 'zabbix::server::service': }->
+    anchor { 'zabbix::server::end': }
+  } else {
+    anchor { 'zabbix::server::start': }->
+    Class['zabbix']->
+    class { 'zabbix::server::user': }->
+    class { 'zabbix::server::install': }->
+    class { 'zabbix::server::config': }~>
+    class { 'zabbix::server::service': }->
+    anchor { 'zabbix::server::end': }
+  }
 
   if $manage_firewall {
     firewall { '100 allow zabbix-server':

@@ -1,8 +1,9 @@
 shared_context 'zabbix::server::service' do
   let :facts do
     {
-      :osfamily   => 'RedHat',
-      :root_home  => '/root',
+      :osfamily                   => 'RedHat',
+      :root_home                  => '/root',
+      :operatingsystemmajrelease  => '6',
     }
   end
 

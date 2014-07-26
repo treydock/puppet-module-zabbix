@@ -1,19 +1,17 @@
 require 'spec_helper'
 
 describe 'zabbix::server' do
-  let :facts do
-    {
-      :osfamily   => 'RedHat',
-      :root_home  => '/root',
-    }
-  end
+  include_context :defaults
+  let(:facts) { default_facts }
 
   it { should create_class('zabbix::server') }
   it { should contain_class('zabbix::params') }
 
-  it { should contain_anchor('zabbix::server::start').that_comes_before('Class[zabbix::server::user]') }
+  it { should contain_anchor('zabbix::server::start').that_comes_before('Class[zabbix]') }
+  it { should contain_class('zabbix').that_comes_before('Class[zabbix::server::user]') }
   it { should contain_class('zabbix::server::user').that_comes_before('Class[zabbix::server::install]') }
-  it { should contain_class('zabbix::server::install').that_comes_before('Class[zabbix::server::config]') }
+  it { should contain_class('zabbix::server::install').that_comes_before('Class[zabbix::database::mysql]') }
+  it { should contain_class('zabbix::database::mysql').that_comes_before('Class[zabbix::server::config]') }
   it { should contain_class('zabbix::server::config').that_notifies('Class[zabbix::server::service]') }
   it { should contain_class('zabbix::server::service').that_comes_before('Anchor[zabbix::server::end]') }
   it { should contain_anchor('zabbix::server::end') }
