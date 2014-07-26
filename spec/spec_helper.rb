@@ -17,6 +17,7 @@ Dir["#{dir}/support/**/*.rb"].sort.each {|f| require f}
 shared_context :defaults do
   let :default_facts do
     {
+      :fqdn                       => 'foo.example.com',
       :osfamily                   => 'RedHat',
       :root_home                  => '/root',
       :operatingsystemmajrelease  => '6',

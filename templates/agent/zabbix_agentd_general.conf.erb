@@ -1,0 +1,32 @@
+#
+# This file is managed by Puppet. DO NOT EDIT!
+#
+
+############ GENERAL PARAMETERS #################
+
+PidFile=<%= scope.lookupvar('zabbix::agent::pid_file') %>
+LogFile=<%= scope.lookupvar('zabbix::agent::log_file') %>
+LogFileSize=0
+# DebugLevel=3
+# SourceIP=
+EnableRemoteCommands=<%= scope.lookupvar('zabbix::agent::enable_remote_commands') ? '1' : '0' %>
+LogRemoteCommands=<%= scope.lookupvar('zabbix::agent::log_remote_commands') ? '1' : '0' %>
+
+##### Passive checks related
+
+Server=<%= scope.lookupvar('zabbix::agent::servers').join(',') %>
+ListenPort=<%= scope.lookupvar('zabbix::agent::listen_port') %>
+ListenIP=<%= scope.lookupvar('zabbix::agent::listen_ip') %>
+StartAgents=<%= scope.lookupvar('zabbix::agent::start_agents') %>
+
+##### Active checks related
+
+ServerActive=<%= scope.lookupvar('zabbix::agent::servers').join(',') %>
+Hostname=<%= @fqdn %>
+# HostnameItem=system.hostname
+# HostMetadata=
+# HostMetadataItem=
+RefreshActiveChecks=<%= scope.lookupvar('zabbix::agent::refresh_active_checks') %>
+BufferSend=<%= scope.lookupvar('zabbix::agent::buffer_send') %>
+BufferSize=<%= scope.lookupvar('zabbix::agent::buffer_size') %>
+MaxLinesPerSecond=<%= scope.lookupvar('zabbix::agent::max_lines_per_second') %>

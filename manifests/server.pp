@@ -1,5 +1,7 @@
 # == Class: zabbix::server
 #
+# Public class
+#
 class zabbix::server (
   $db_type                    = $::zabbix::params::db_type,
   $manage_user                = $::zabbix::params::server_manage_user,
@@ -19,6 +21,7 @@ class zabbix::server (
   $schema_sql_path            = $::zabbix::params::schema_sql_paths[$db_type],
   $images_sql_path            = $::zabbix::params::images_sql_paths['mysql'],
   $data_sql_path              = $::zabbix::params::data_sql_paths['mysql'],
+  $config_dir                 = $::zabbix::params::server_config_dir,
   $config_file                = $::zabbix::params::server_config_file,
   $manage_logrotate           = $::zabbix::params::server_manage_logrotate,
   $use_logrotate_rule         = $::zabbix::params::server_use_logrotate_rule,
@@ -31,7 +34,6 @@ class zabbix::server (
   $alert_scripts_path         = $::zabbix::params::alert_scripts_path,
   $external_scripts           = $::zabbix::params::external_scripts,
   $tmp_dir                    = $::zabbix::params::server_tmp_dir,
-  $config_dir                 = $::zabbix::params::server_config_dir,
   $start_pollers              = $::zabbix::params::server_config_defaults['start_pollers'],
   $start_ipmi_pollers         = $::zabbix::params::server_config_defaults['start_ipmi_pollers'],
   $start_pollers_unreachable  = $::zabbix::params::server_config_defaults['start_pollers_unreachable'],

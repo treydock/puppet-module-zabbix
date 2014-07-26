@@ -6,6 +6,9 @@
 class zabbix::params {
 
   # User / Group defaults
+  $agent_manage_user  = true
+  $agent_user_uid     = undef
+  $agent_group_gid    = undef
   $server_manage_user = true
   $server_user_uid    = undef
   $server_group_gid   = undef
@@ -21,9 +24,29 @@ class zabbix::params {
   $db_port          = '3306'
 
   # Logrotate defaults
+  $agent_manage_logrotate     = true
+  $agent_use_logrotate_rule   = false
+  $agent_logrotate_every      = 'monthly'
   $server_manage_logrotate    = true
   $server_use_logrotate_rule  = false
   $server_logrotate_every     = 'monthly'
+
+  # Agent configuration defaults
+  $servers                = ['127.0.0.1']
+  $agent_listen_port      = 10050
+  $agent_config_defaults  = {
+    'enable_remote_commands'  => false,
+    'log_remote_commands'     => false,
+    'listen_ip'               => '0.0.0.0',
+    'start_agents'            => 3,
+    'refresh_active_checks'   => 120,
+    'buffer_send'             => 5,
+    'buffer_size'             => 100,
+    'max_lines_per_second'    => 100,
+    'timeout'                 => 3,
+    'allow_root'              => false,
+    'unsafe_user_parameters'  => false,
+  }
 
   # Server configuration defaults
   $server_listen_port     = 10051
@@ -64,17 +87,15 @@ class zabbix::params {
       }
 
       # agent defaults
-      $agent_package_name         = 'zabbix-agent'
-      $agent_service_name         = 'zabbix-agent'
-      $agent_service_hasstatus    = true
-      $agent_service_hasrestart   = true
-      $agent_config_path          = '/etc/zabbix_agentd.conf'
-      $agent_include_dir          = '/etc/zabbix/zabbix_agentd.d/'
-      $agent_logrotate_path       = '/etc/logrotate.d/zabbix-agent'
-      $agent_pid_dir              = '/var/run/zabbix'
-      $agent_pid_file             = "${agent_pid_dir}/zabbix_agentd.pid"
+      $agent_config_file          = '/etc/zabbix_agentd.conf'
+      $agent_config_dir           = '/etc/zabbix_agentd.conf.d'
+      $agent_user_home_dir        = '/var/lib/zabbix'
       $agent_log_dir              = '/var/log/zabbix'
       $agent_log_file             = "${agent_log_dir}/zabbix_agentd.log"
+      $agent_pid_dir              = '/var/run/zabbix'
+      $agent_pid_file             = "${agent_pid_dir}/zabbix_agentd.pid"
+      $agent_package_name         = 'zabbix22-agent'
+      $agent_service_name         = 'zabbix-agent'
 
       # server defaults
       $server_config_file         = '/etc/zabbix_server.conf'

@@ -1,0 +1,8 @@
+<%= scope.lookupvar('zabbix::agent::log_file') %> {
+  compress
+  create 0664 zabbix zabbix
+  missingok
+  <%= scope.lookupvar('zabbix::agent::logrotate_every') %>
+  notifempty
+  su zabbix zabbix
+}

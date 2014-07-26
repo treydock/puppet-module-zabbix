@@ -1,0 +1,9 @@
+#
+# This file is managed by Puppet. DO NOT EDIT!
+#
+
+############ ADVANCED PARAMETERS #################
+
+# Alias=
+Timeout=<%= scope.lookupvar('zabbix::agent::timeout') %>
+AllowRoot=<%= scope.lookupvar('zabbix::agent::allow_root') ? '1' : '0' %>
