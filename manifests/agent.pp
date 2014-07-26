@@ -14,6 +14,7 @@ class zabbix::agent (
   $manage_logrotate           = $::zabbix::params::agent_manage_logrotate,
   $use_logrotate_rule         = $::zabbix::params::agent_use_logrotate_rule,
   $logrotate_every            = $::zabbix::params::agent_logrotate_every,
+  $servers                    = $::zabbix::params::servers,
   $listen_port                = $::zabbix::params::agent_listen_port,
   $log_dir                    = $::zabbix::params::agent_log_dir,
   $log_file                   = $::zabbix::params::agent_log_file,
