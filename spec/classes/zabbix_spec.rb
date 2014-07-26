@@ -9,23 +9,29 @@ describe 'zabbix' do
 
   it { should have_package_resource_count(0) }
   it { should_not contain_package('zabbix') }
+  it { should_not contain_package('zabbix-agent') }
   it { should_not contain_package('zabbix20') }
+  it { should_not contain_package('zabbix20-agent') }
 
-  context 'when purge_conflicting_packages => true' do
-    let(:params) {{ :purge_conflicting_packages => true }}
-    it { should have_package_resource_count(2) }
-    it { should contain_package('zabbix').with_ensure('purged') }
-    it { should contain_package('zabbix20').with_ensure('purged') }
+  context 'when remove_conflicting_packages => true' do
+    let(:params) {{ :remove_conflicting_packages => true }}
+    it { should have_package_resource_count(4) }
+    it { should contain_package('zabbix').with_ensure('absent') }
+    it { should contain_package('zabbix-agent').with_ensure('absent') }
+    it { should contain_package('zabbix20').with_ensure('absent') }
+    it { should contain_package('zabbix20-agent').with_ensure('absent') }
 
     context "when operatingsystemmajversion => 7" do
       let(:facts) { default_facts.merge({
         :operatingsystemmajrelease => '7',
       })}
-      let(:params) {{ :purge_conflicting_packages => true }}
+      let(:params) {{ :remove_conflicting_packages => true }}
 
-      it { should have_package_resource_count(1) }
+      it { should have_package_resource_count(2) }
       it { should_not contain_package('zabbix') }
-      it { should contain_package('zabbix20').with_ensure('purged') }
+      it { should_not contain_package('zabbix-agent') }
+      it { should contain_package('zabbix20').with_ensure('absent') }
+      it { should contain_package('zabbix20-agent').with_ensure('absent') }
     end
 
     [
@@ -34,17 +40,19 @@ describe 'zabbix' do
       [],
     ].each do |v|
       context "when conflicting_packages => #{v}" do
-        let(:params) {{ :purge_conflicting_packages => true, :conflicting_packages => v }}
+        let(:params) {{ :remove_conflicting_packages => true, :conflicting_packages => v }}
         it { should have_package_resource_count(0) }
         it { should_not contain_package('zabbix') }
+        it { should_not contain_package('zabbix-agent') }
         it { should_not contain_package('zabbix20') }
+        it { should_not contain_package('zabbix20-agent') }
       end
     end
   end
 
   # Test validate_bool parameters
   [
-    :purge_conflicting_packages,
+    :remove_conflicting_packages,
   ].each do |p|
     context "when #{p} => 'foo'" do
       let(:params) {{ p => 'foo' }}
