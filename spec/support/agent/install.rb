@@ -6,7 +6,7 @@ shared_context 'zabbix::agent::install' do
   it { should contain_class('epel') }
 
   it do
-    should contain_package('zabbix-agent').only_with({
+    should contain_package('zabbix::agent').only_with({
       :ensure   => 'present',
       :name     => 'zabbix22-agent',
       :require  => 'Yumrepo[epel]',
