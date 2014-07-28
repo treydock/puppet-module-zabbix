@@ -24,6 +24,7 @@ class zabbix::agent (
   $log_remote_commands        = $::zabbix::params::agent_config_defaults['log_remote_commands'],
   $listen_ip                  = $::zabbix::params::agent_config_defaults['listen_ip'],
   $start_agents               = $::zabbix::params::agent_config_defaults['start_agents'],
+  $host_metadata              = $::zabbix::params::agent_config_defaults['host_metadata'],
   $refresh_active_checks      = $::zabbix::params::agent_config_defaults['refresh_active_checks'],
   $buffer_send                = $::zabbix::params::agent_config_defaults['buffer_send'],
   $buffer_size                = $::zabbix::params::agent_config_defaults['buffer_size'],
@@ -42,6 +43,9 @@ class zabbix::agent (
   validate_bool($log_remote_commands)
   validate_bool($unsafe_user_parameters)
   validate_bool($manage_firewall)
+
+  validate_array($servers)
+  validate_array($listen_ip)
 
   include ::zabbix
 

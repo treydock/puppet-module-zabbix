@@ -37,8 +37,9 @@ class zabbix::params {
   $agent_config_defaults  = {
     'enable_remote_commands'  => false,
     'log_remote_commands'     => false,
-    'listen_ip'               => '0.0.0.0',
+    'listen_ip'               => ['0.0.0.0'],
     'start_agents'            => 3,
+    'host_metadata'           => '',
     'refresh_active_checks'   => 120,
     'buffer_send'             => 5,
     'buffer_size'             => 100,
@@ -79,13 +80,6 @@ class zabbix::params {
 
   case $::osfamily {
     'RedHat': {
-      $remove_conflicting_packages = false
-      if $::operatingsystemmajrelease >= 7 {
-        $conflicting_packages     = ['zabbix20','zabbix20-agent']
-      } else {
-        $conflicting_packages     = ['zabbix20','zabbix20-agent','zabbix','zabbix-agent']
-      }
-
       # agent defaults
       $agent_config_file          = '/etc/zabbix_agentd.conf'
       $agent_config_dir           = '/etc/zabbix_agentd.conf.d'
@@ -108,6 +102,14 @@ class zabbix::params {
       $alert_scripts_path         = "${server_user_home_dir}/alertscripts"
       $external_scripts           = "${server_user_home_dir}/externalscripts"
       $server_tmp_dir             = "${server_user_home_dir}/tmp"
+      $server_service_name        = 'zabbix-server'
+
+      # Web defaults
+      $web_config_dir             = '/etc/zabbix/web'
+      $web_config_file            = "${web_config_dir}/zabbix.conf.php"
+      $apache_user_name           = 'apache'
+      $apache_group_name          = 'apache'
+
       # Defaults that depend on db_type
       $server_packages            = {
         'mysql'   => 'zabbix22-server-mysql',
@@ -128,7 +130,9 @@ class zabbix::params {
       $data_sql_paths             = {
         'mysql'   => '/usr/share/zabbix-mysql/data.sql',
       }
-      $server_service_name        = 'zabbix-server'
+      $web_packages               = {
+        'mysql'   => 'zabbix22-web-mysql',
+      }
     }
 
     default: {

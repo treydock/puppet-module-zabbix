@@ -53,43 +53,13 @@ class zabbix::agent::config {
     purge   => true,
   }
 
-  file { 'zabbix_agentd_general.conf':
+  file { 'zabbix_agentd_managed.conf':
     ensure  => 'file',
-    path    => "${::zabbix::agent::config_dir}/zabbix_agentd_general.conf",
+    path    => "${::zabbix::agent::config_dir}/zabbix_agentd_managed.conf",
     owner   => 'root',
     group   => 'root',
     mode    => '0644',
-    content => template('zabbix/agent/zabbix_agentd_general.conf.erb'),
-    require => File['/etc/zabbix_agentd.conf.d'],
-  }
-
-  file { 'zabbix_agentd_advanced.conf':
-    ensure  => 'file',
-    path    => "${::zabbix::agent::config_dir}/zabbix_agentd_advanced.conf",
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0644',
-    content => template('zabbix/agent/zabbix_agentd_advanced.conf.erb'),
-    require => File['/etc/zabbix_agentd.conf.d'],
-  }
-
-  file { 'zabbix_agentd_user_parameters.conf':
-    ensure  => 'file',
-    path    => "${::zabbix::agent::config_dir}/zabbix_agentd_user_parameters.conf",
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0644',
-    content => template('zabbix/agent/zabbix_agentd_user_parameters.conf.erb'),
-    require => File['/etc/zabbix_agentd.conf.d'],
-  }
-
-  file { 'zabbix_agentd_modules.conf':
-    ensure  => 'file',
-    path    => "${::zabbix::agent::config_dir}/zabbix_agentd_modules.conf",
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0644',
-    content => template('zabbix/agent/zabbix_agentd_modules.conf.erb'),
+    content => template('zabbix/agent/zabbix_agentd_managed.conf.erb'),
     require => File['/etc/zabbix_agentd.conf.d'],
   }
 

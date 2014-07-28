@@ -1,4 +1,5 @@
 require 'puppetlabs_spec_helper/module_spec_helper'
+require 'lib/ext_string'
 
 begin
   require 'simplecov'

@@ -16,7 +16,7 @@ LogRemoteCommands=<%= scope.lookupvar('zabbix::agent::log_remote_commands') ? '1
 
 Server=<%= scope.lookupvar('zabbix::agent::servers').join(',') %>
 ListenPort=<%= scope.lookupvar('zabbix::agent::listen_port') %>
-ListenIP=<%= scope.lookupvar('zabbix::agent::listen_ip') %>
+ListenIP=<%= scope.lookupvar('zabbix::agent::listen_ip').join(',') %>
 StartAgents=<%= scope.lookupvar('zabbix::agent::start_agents') %>
 
 ##### Active checks related
@@ -24,9 +24,25 @@ StartAgents=<%= scope.lookupvar('zabbix::agent::start_agents') %>
 ServerActive=<%= scope.lookupvar('zabbix::agent::servers').join(',') %>
 Hostname=<%= @fqdn %>
 # HostnameItem=system.hostname
-# HostMetadata=
+HostMetadata=<%= scope.lookupvar('zabbix::agent::host_metadata') %>
 # HostMetadataItem=
 RefreshActiveChecks=<%= scope.lookupvar('zabbix::agent::refresh_active_checks') %>
 BufferSend=<%= scope.lookupvar('zabbix::agent::buffer_send') %>
 BufferSize=<%= scope.lookupvar('zabbix::agent::buffer_size') %>
 MaxLinesPerSecond=<%= scope.lookupvar('zabbix::agent::max_lines_per_second') %>
+
+############ ADVANCED PARAMETERS #################
+
+# Alias=
+Timeout=<%= scope.lookupvar('zabbix::agent::timeout') %>
+AllowRoot=<%= scope.lookupvar('zabbix::agent::allow_root') ? '1' : '0' %>
+
+####### USER-DEFINED MONITORED PARAMETERS #######
+
+UnsafeUserParameters=<%= scope.lookupvar('zabbix::agent::unsafe_user_parameters') ? '1' : '0' %>
+# UserParameter=
+
+####### LOADABLE MODULES #######
+
+# LoadModulePath=${libdir}/modules
+# LoadModule=
