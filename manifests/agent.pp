@@ -9,7 +9,7 @@ class zabbix::agent (
   $group_gid                  = $::zabbix::params::agent_group_gid,
   $package_ensure             = 'present',
   $package_name               = $::zabbix::params::agent_package_name,
-  $config_dir                 = $::zabbix::params::agent_config_dir,
+  $config_d_dir               = $::zabbix::params::agent_config_d_dir,
   $config_file                = $::zabbix::params::agent_config_file,
   $manage_logrotate           = $::zabbix::params::agent_manage_logrotate,
   $use_logrotate_rule         = $::zabbix::params::agent_use_logrotate_rule,
@@ -56,6 +56,9 @@ class zabbix::agent (
   class { 'zabbix::agent::config': }~>
   class { 'zabbix::agent::service': }->
   anchor { 'zabbix::agent::end': }
+
+  # Ensure updates to package restart service
+  Class['zabbix::agent::install']~>Class['zabbix::agent::service']
 
   if $manage_firewall {
     firewall { '100 allow zabbix-agent':

@@ -1,11 +1,5 @@
 shared_context 'zabbix::server::service' do
-  let :facts do
-    {
-      :osfamily                   => 'RedHat',
-      :root_home                  => '/root',
-      :operatingsystemmajrelease  => '6',
-    }
-  end
+  let(:facts) { default_facts }
 
   it { should create_class('zabbix::server::service') }
   it { should contain_class('zabbix::server') }

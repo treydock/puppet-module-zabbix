@@ -28,8 +28,39 @@ describe 'zabbix::server' do
       :schema_sql_path  => '/usr/share/zabbix-mysql/schema.sql',
       :images_sql_path  => '/usr/share/zabbix-mysql/images.sql',
       :data_sql_path    => '/usr/share/zabbix-mysql/data.sql',
-      :before           => 'Class[Zabbix::Server::Config]',
+      :before           => ['Class[Zabbix::Server::Config]','Class[Zabbix::Web]'],
     })
+  end
+
+  it "defines Class[zabbix::web]" do
+    should contain_class('zabbix::web').only_with({
+      :name                 => 'Zabbix::Web',
+      :package_ensure       => 'present',
+      :manage_database      => 'false',
+      :export_database      => 'false',
+      :export_database_tag  => 'example.com',
+      :db_type              => 'mysql',
+      :package_name         => 'zabbix22-web-mysql',
+      :db_host              => 'localhost',
+      :db_port              => '3306',
+      :db_name              => 'zabbix',
+      :db_user              => 'zabbix',
+      :db_password          => 'changeme',
+      :zabbix_server        => '127.0.0.1',
+      :zabbix_server_port   => '10051',
+      :zabbix_server_name   => 'Zabbix Server',
+      :image_format_default => 'IMAGE_FORMAT_PNG',
+      :config_dir           => '/etc/zabbix/web',
+      :config_file          => '/etc/zabbix/web/zabbix.conf.php',
+      :apache_user_name     => 'apache',
+      :apache_group_name    => 'apache',
+      :before               => 'Class[Zabbix::Server::Config]',
+    })
+  end
+
+  context "when manage_web => false" do
+    let(:params) {{ :manage_web => false }}
+    it { should_not contain_class('zabbix::web') }
   end
 
   include_context 'zabbix::server::user'
@@ -50,6 +81,7 @@ describe 'zabbix::server' do
   [
     :manage_user,
     :manage_database,
+    :manage_web,
     :manage_logrotate,
     :use_logrotate_rule,
     :start_snmp_trapper,

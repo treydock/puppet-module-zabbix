@@ -29,38 +29,23 @@ class zabbix::agent::config {
     mode    => '0775',
   }
 
-  file_line { 'zabbix_agentd.conf Include':
-    path  => '/etc/zabbix_agentd.conf',
-    line  => "Include=${::zabbix::agent::config_dir}",
-    match => '^Include=.*',
-  }
-
   file { '/etc/zabbix_agentd.conf':
     ensure  => 'file',
     path    => $::zabbix::agent::config_file,
     owner   => 'root',
     group   => 'root',
     mode    => '0644',
+    content => template('zabbix/agent/zabbix_agentd.conf.erb'),
   }
 
   file { '/etc/zabbix_agentd.conf.d':
     ensure  => 'directory',
-    path    => $::zabbix::agent::config_dir,
+    path    => $::zabbix::agent::config_d_dir,
     owner   => 'root',
     group   => 'root',
     mode    => '0755',
     recurse => true,
     purge   => true,
-  }
-
-  file { 'zabbix_agentd_managed.conf':
-    ensure  => 'file',
-    path    => "${::zabbix::agent::config_dir}/zabbix_agentd_managed.conf",
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0644',
-    content => template('zabbix/agent/zabbix_agentd_managed.conf.erb'),
-    require => File['/etc/zabbix_agentd.conf.d'],
   }
 
   if $::zabbix::agent::manage_logrotate {

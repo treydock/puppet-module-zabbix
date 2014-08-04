@@ -36,6 +36,7 @@ MaxLinesPerSecond=<%= scope.lookupvar('zabbix::agent::max_lines_per_second') %>
 # Alias=
 Timeout=<%= scope.lookupvar('zabbix::agent::timeout') %>
 AllowRoot=<%= scope.lookupvar('zabbix::agent::allow_root') ? '1' : '0' %>
+Include=<%= scope.lookupvar('zabbix::agent::config_d_dir') %>
 
 ####### USER-DEFINED MONITORED PARAMETERS #######
 

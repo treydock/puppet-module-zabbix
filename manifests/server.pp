@@ -10,6 +10,7 @@ class zabbix::server (
   $group_gid                  = $::zabbix::params::server_group_gid,
   $package_ensure             = 'present',
   $package_name               = $::zabbix::params::server_packages[$db_type],
+  # database
   $manage_database            = $::zabbix::params::manage_database,
   $database_package_name      = $::zabbix::params::database_packages[$db_type],
   $db_host                    = $::zabbix::params::db_host,
@@ -21,7 +22,19 @@ class zabbix::server (
   $schema_sql_path            = $::zabbix::params::schema_sql_paths[$db_type],
   $images_sql_path            = $::zabbix::params::images_sql_paths['mysql'],
   $data_sql_path              = $::zabbix::params::data_sql_paths['mysql'],
-  $config_dir                 = $::zabbix::params::server_config_dir,
+  # web
+  $manage_web                 = $::zabbix::params::manage_web,
+  $web_export_database        = $::zabbix::params::web_export_database,
+  $export_database_tag        = $::zabbix::params::export_database_tag,
+  $web_package_name           = $::zabbix::params::web_packages[$db_type],
+  $zabbix_server_name         = $::zabbix::params::zabbix_server_name,
+  $image_format_default       = $::zabbix::params::image_format_default,
+  $web_config_dir             = $::zabbix::params::web_config_dir,
+  $web_config_file            = $::zabbix::params::web_config_file,
+  $apache_user_name           = $::zabbix::params::apache_user_name,
+  $apache_group_name          = $::zabbix::params::apache_group_name,
+  # zabbix-server
+  $config_d_dir               = $::zabbix::params::server_config_d_dir,
   $config_file                = $::zabbix::params::server_config_file,
   $manage_logrotate           = $::zabbix::params::server_manage_logrotate,
   $use_logrotate_rule         = $::zabbix::params::server_use_logrotate_rule,
@@ -64,6 +77,7 @@ class zabbix::server (
 
   validate_bool($manage_user)
   validate_bool($manage_database)
+  validate_bool($manage_web)
   validate_bool($manage_logrotate)
   validate_bool($use_logrotate_rule)
   validate_bool($start_snmp_trapper)
@@ -103,6 +117,33 @@ class zabbix::server (
     class { 'zabbix::server::config': }~>
     class { 'zabbix::server::service': }->
     anchor { 'zabbix::server::end': }
+  }
+
+  if $manage_web {
+    Class["zabbix::database::${db_type}"]->
+    Class['zabbix::web']->
+    Class['zabbix::server::config']
+
+    class { 'zabbix::web':
+      package_ensure        => $package_ensure,
+      manage_database       => false,
+      export_database       => $web_export_database,
+      db_type               => $db_type,
+      package_name          => $web_package_name,
+      db_host               => $db_host,
+      db_port               => $db_port,
+      db_name               => $db_name,
+      db_user               => $db_user,
+      db_password           => $db_password,
+      zabbix_server         => '127.0.0.1',
+      zabbix_server_port    => $listen_port,
+      zabbix_server_name    => $zabbix_server_name,
+      image_format_default  => $image_format_default,
+      config_dir            => $web_config_dir,
+      config_file           => $web_config_file,
+      apache_user_name      => $apache_user_name,
+      apache_group_name     => $apache_group_name,
+    }
   }
 
   if $manage_firewall {

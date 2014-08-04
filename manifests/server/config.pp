@@ -50,53 +50,21 @@ class zabbix::server::config {
     mode    => '0775',
   }
 
-  file_line { 'zabbix_server.conf Include':
-    path  => '/etc/zabbix_server.conf',
-    line  => "Include=${::zabbix::server::config_dir}",
-    match => '^Include=.*',
-  }
-
   file { '/etc/zabbix_server.conf':
     ensure  => 'file',
     path    => $::zabbix::server::config_file,
     owner   => 'root',
     mode    => '0640',
+    content => template('zabbix/server/zabbix_server.conf.erb'),
   }
 
   file { '/etc/zabbix_server.conf.d':
     ensure  => 'directory',
-    path    => $::zabbix::server::config_dir,
+    path    => $::zabbix::server::config_d_dir,
     owner   => 'root',
     mode    => '0750',
     recurse => true,
     purge   => true,
-  }
-
-  file { 'zabbix_server_general.conf':
-    ensure  => 'file',
-    path    => "${::zabbix::server::config_dir}/zabbix_server_general.conf",
-    owner   => 'root',
-    mode    => '0640',
-    content => template('zabbix/server/zabbix_server_general.conf.erb'),
-    require => File['/etc/zabbix_server.conf.d'],
-  }
-
-  file { 'zabbix_server_advanced.conf':
-    ensure  => 'file',
-    path    => "${::zabbix::server::config_dir}/zabbix_server_advanced.conf",
-    owner   => 'root',
-    mode    => '0640',
-    content => template('zabbix/server/zabbix_server_advanced.conf.erb'),
-    require => File['/etc/zabbix_server.conf.d'],
-  }
-
-  file { 'zabbix_server_modules.conf':
-    ensure  => 'file',
-    path    => "${::zabbix::server::config_dir}/zabbix_server_modules.conf",
-    owner   => 'root',
-    mode    => '0640',
-    content => template('zabbix/server/zabbix_server_modules.conf.erb'),
-    require => File['/etc/zabbix_server.conf.d'],
   }
 
   if $::zabbix::server::manage_logrotate {

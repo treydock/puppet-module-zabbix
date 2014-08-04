@@ -34,50 +34,20 @@ shared_context 'zabbix::agent::config' do
     })
   end
 
-  it 'should set zabbix_agentd.conf Include value' do
-    should contain_file_line('zabbix_agentd.conf Include').with({
-      :path  => '/etc/zabbix_agentd.conf',
-      :line  => 'Include=/etc/zabbix_agentd.conf.d',
-      :match => '^Include=.*',
-    })
-  end
-
   it 'should manage zabbix_agentd.conf' do
     should contain_file('/etc/zabbix_agentd.conf').only_with({
-      :ensure => 'file',
-      :path   => '/etc/zabbix_agentd.conf',
-      :owner  => 'root',
-      :group  => 'root',
-      :mode   => '0644',
-    })
-  end
-
-  it 'manage zabbix-agent conf.d directory' do
-    should contain_file('/etc/zabbix_agentd.conf.d').only_with({
-      :ensure   => 'directory',
-      :path     => '/etc/zabbix_agentd.conf.d',
-      :mode     => '0755',
-      :owner    => 'root',
-      :group    => 'root',
-      :recurse  => 'true',
-      :purge    => 'true',
-    })
-  end
-
-  it 'should manage zabbix_agentd_managed.conf' do
-    should contain_file('zabbix_agentd_managed.conf').only_with({
       :ensure   => 'file',
-      :path     => '/etc/zabbix_agentd.conf.d/zabbix_agentd_managed.conf',
+      :path     => '/etc/zabbix_agentd.conf',
       :owner    => 'root',
       :group    => 'root',
       :mode     => '0644',
       :content  => /.*/,
-      :require  => 'File[/etc/zabbix_agentd.conf.d]',
     })
   end
 
-  it 'File[zabbix_agentd_managed.conf] should have valid contents' do
-    verify_contents(catalogue, 'zabbix_agentd_managed.conf', [
+
+  it 'should have valid contents for zabbix_agentd.conf' do
+    verify_contents(catalogue, '/etc/zabbix_agentd.conf', [
       'PidFile=/var/run/zabbix/zabbix_agentd.pid',
       'LogFile=/var/log/zabbix/zabbix_agentd.log',
       'LogFileSize=0',
@@ -101,6 +71,7 @@ shared_context 'zabbix::agent::config' do
       '# Alias=',
       'Timeout=3',
       'AllowRoot=0',
+      'Include=/etc/zabbix_agentd.conf.d',
       'UnsafeUserParameters=0',
       '# UserParameter=',
       '# LoadModulePath=${libdir}/modules',
@@ -108,10 +79,22 @@ shared_context 'zabbix::agent::config' do
     ])
   end
 
+  it 'manage zabbix-agent conf.d directory' do
+    should contain_file('/etc/zabbix_agentd.conf.d').only_with({
+      :ensure   => 'directory',
+      :path     => '/etc/zabbix_agentd.conf.d',
+      :mode     => '0755',
+      :owner    => 'root',
+      :group    => 'root',
+      :recurse  => 'true',
+      :purge    => 'true',
+    })
+  end
+
   context "when servers => ['192.168.1.1','192.168.1.2']" do
     let(:params) {{ :servers => ['192.168.1.1','192.168.1.2'] }}
     it "should set Server and ServerActive to 192.168.1.1,192.168.1.2" do
-      verify_contents(catalogue, 'zabbix_agentd_managed.conf', [
+      verify_contents(catalogue, '/etc/zabbix_agentd.conf', [
         'Server=192.168.1.1,192.168.1.2',
         'ServerActive=192.168.1.1,192.168.1.2',
       ])
@@ -129,7 +112,7 @@ shared_context 'zabbix::agent::config' do
       config_name = p.to_s.camel_case
       let(:params) {{ p => true }}
       it "should set #{config_name}=1" do
-        verify_contents(catalogue, 'zabbix_agentd_managed.conf', ["#{config_name}=1"])
+        verify_contents(catalogue, '/etc/zabbix_agentd.conf', ["#{config_name}=1"])
       end
     end
   end
@@ -147,7 +130,7 @@ shared_context 'zabbix::agent::config' do
       config_name = p.to_s.camel_case
       let(:params) {{ p => 10 }}
       it "should set #{config_name}=10" do
-        verify_contents(catalogue, 'zabbix_agentd_managed.conf', ["#{config_name}=10"])
+        verify_contents(catalogue, '/etc/zabbix_agentd.conf', ["#{config_name}=10"])
       end
     end
   end
@@ -156,7 +139,7 @@ shared_context 'zabbix::agent::config' do
   context "when listen_ip => ['192.168.1.1','127.0.0.1']" do
     let(:params) {{ :listen_ip => ['192.168.1.1','127.0.0.1'] }}
     it "should set ListenIP=192.168.1.1,127.0.0.1" do
-      verify_contents(catalogue, 'zabbix_agentd_managed.conf', ["ListenIP=192.168.1.1,127.0.0.1"])
+      verify_contents(catalogue, '/etc/zabbix_agentd.conf', ["ListenIP=192.168.1.1,127.0.0.1"])
     end
   end
 
@@ -168,7 +151,7 @@ shared_context 'zabbix::agent::config' do
       config_name = p.to_s.camel_case
       let(:params) {{ p => 'foo' }}
       it "should set #{config_name}=foo" do
-        verify_contents(catalogue, 'zabbix_agentd_managed.conf', ["#{config_name}=foo"])
+        verify_contents(catalogue, '/etc/zabbix_agentd.conf', ["#{config_name}=foo"])
       end
     end
   end

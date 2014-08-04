@@ -19,6 +19,7 @@ shared_context :defaults do
   let :default_facts do
     {
       :fqdn                       => 'foo.example.com',
+      :domain                     => 'example.com',
       :osfamily                   => 'RedHat',
       :root_home                  => '/root',
       :operatingsystemmajrelease  => '6',

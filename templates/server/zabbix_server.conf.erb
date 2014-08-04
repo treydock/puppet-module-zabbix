@@ -2,6 +2,22 @@
 # This file is managed by Puppet. DO NOT EDIT!
 #
 
+############ GENERAL PARAMETERS #################
+
+NodeID=0
+ListenPort=<%= scope.lookupvar('zabbix::server::listen_port') %>
+# SourceIP=
+LogFile=<%= scope.lookupvar('zabbix::server::log_file') %>
+LogFileSize=0
+DebugLevel=3
+PidFile=<%= scope.lookupvar('zabbix::server::pid_file') %>
+DBHost=<%= scope.lookupvar('zabbix::server::db_host') %>
+DBName=<%= scope.lookupvar('zabbix::server::db_name') %>
+DBUser=<%= scope.lookupvar('zabbix::server::db_user') %>
+DBPassword=<%= scope.lookupvar('zabbix::server::db_password') %>
+DBSocket=/var/lib/mysql/mysql.sock
+DBPort=<%= scope.lookupvar('zabbix::server::db_port') %>
+
 ############ ADVANCED PARAMETERS ################
 
 StartPollers=<%= scope.lookupvar('zabbix::server::start_pollers') %>
@@ -49,3 +65,9 @@ TmpDir=<%= scope.lookupvar('zabbix::server::tmp_dir') %>
 # ProxyConfigFrequency=3600
 # ProxyDataFrequency=1
 # AllowRoot=0
+Include=<%= scope.lookupvar('zabbix::server::config_d_dir') %>
+
+####### LOADABLE MODULES #######
+
+# LoadModulePath=${libdir}/modules
+# LoadModule=

@@ -2,7 +2,6 @@
 #
 # The zabbix default configuration settings.
 #
-#
 class zabbix::params {
 
   # User / Group defaults
@@ -14,14 +13,22 @@ class zabbix::params {
   $server_group_gid   = undef
 
   # Database defaults
-  $manage_database  = true
-  $db_type          = 'mysql'
-  $db_host          = 'localhost'
-  $db_name          = 'zabbix'
-  $db_user          = 'zabbix'
-  $db_password      = 'changeme'
-  $db_socket        = '/var/lib/mysql/mysql.sock'
-  $db_port          = '3306'
+  $manage_database      = true
+  $web_manage_dabase    = false
+  $web_export_database  = false
+  $export_database_tag  = $::domain
+  $db_type              = 'mysql'
+  $db_host              = 'localhost'
+  $db_name              = 'zabbix'
+  $db_user              = 'zabbix'
+  $db_password          = 'changeme'
+  $db_socket            = '/var/lib/mysql/mysql.sock'
+  $db_port              = '3306'
+
+  # Web defaults
+  $manage_web           = true
+  $zabbix_server_name   = 'Zabbix Server'
+  $image_format_default = 'IMAGE_FORMAT_PNG'
 
   # Logrotate defaults
   $agent_manage_logrotate     = true
@@ -82,7 +89,7 @@ class zabbix::params {
     'RedHat': {
       # agent defaults
       $agent_config_file          = '/etc/zabbix_agentd.conf'
-      $agent_config_dir           = '/etc/zabbix_agentd.conf.d'
+      $agent_config_d_dir         = '/etc/zabbix_agentd.conf.d'
       $agent_user_home_dir        = '/var/lib/zabbix'
       $agent_log_dir              = '/var/log/zabbix'
       $agent_log_file             = "${agent_log_dir}/zabbix_agentd.log"
@@ -93,7 +100,7 @@ class zabbix::params {
 
       # server defaults
       $server_config_file         = '/etc/zabbix_server.conf'
-      $server_config_dir          = '/etc/zabbix_server.conf.d'
+      $server_config_d_dir        = '/etc/zabbix_server.conf.d'
       $server_user_home_dir       = '/var/lib/zabbixsrv'
       $server_log_dir             = '/var/log/zabbixsrv'
       $server_log_file            = "${server_log_dir}/zabbix_server.log"

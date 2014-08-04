@@ -15,6 +15,8 @@ describe 'zabbix::agent' do
   it { should contain_class('zabbix::agent::service').that_comes_before('Anchor[zabbix::agent::end]') }
   it { should contain_anchor('zabbix::agent::end') }
 
+  it { should contain_class('zabbix::agent::install').that_notifies('Class[zabbix::agent::service]') }
+
   include_context 'zabbix::agent::user'
   include_context 'zabbix::agent::install'
   include_context 'zabbix::agent::config'
