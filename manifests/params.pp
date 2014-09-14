@@ -91,6 +91,7 @@ class zabbix::params {
       $agent_config_file          = '/etc/zabbix_agentd.conf'
       $agent_config_d_dir         = '/etc/zabbix_agentd.conf.d'
       $agent_user_home_dir        = '/var/lib/zabbix'
+      $agent_scripts_dir          = "${agent_user_home_dir}/bin"
       $agent_log_dir              = '/var/log/zabbix'
       $agent_log_file             = "${agent_log_dir}/zabbix_agentd.log"
       $agent_pid_dir              = '/var/run/zabbix'

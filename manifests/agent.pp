@@ -11,6 +11,7 @@ class zabbix::agent (
   $package_name               = $::zabbix::params::agent_package_name,
   $config_d_dir               = $::zabbix::params::agent_config_d_dir,
   $config_file                = $::zabbix::params::agent_config_file,
+  $scripts_dir                = $::zabbix::params::agent_scripts_dir,
   $manage_logrotate           = $::zabbix::params::agent_manage_logrotate,
   $use_logrotate_rule         = $::zabbix::params::agent_use_logrotate_rule,
   $logrotate_every            = $::zabbix::params::agent_logrotate_every,

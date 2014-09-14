@@ -15,6 +15,12 @@ class zabbix::agent::config {
     mode    => '0750',
   }
 
+  file { '/var/lib/zabbix/bin':
+    ensure  => 'directory',
+    path    => $::zabbix::agent::scripts_dir,
+    mode    => '0750',
+  }
+
   file { '/var/log/zabbix':
     ensure  => 'directory',
     path    => $::zabbix::agent::log_dir,

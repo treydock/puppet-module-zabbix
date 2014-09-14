@@ -14,6 +14,16 @@ shared_context 'zabbix::agent::config' do
     })
   end
 
+  it 'manage zabbix-agent script directory' do
+    should contain_file('/var/lib/zabbix/bin').only_with({
+      :ensure   => 'directory',
+      :path     => '/var/lib/zabbix/bin',
+      :mode     => '0750',
+      :owner    => 'zabbix',
+      :group    => 'zabbix',
+    })
+  end
+
   it 'manage zabbix-agent\'s log directory' do
     should contain_file('/var/log/zabbix').only_with({
       :ensure   => 'directory',
