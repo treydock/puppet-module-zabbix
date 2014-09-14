@@ -8,6 +8,7 @@ describe 'zabbix::agent::userparameter' do
   let(:title) { 'foo' }
 
   it { should create_zabbix__agent__userparameter('foo') }
+  it { should contain_class('zabbix::agent') }
 
   it "should create userparameter file" do
     should contain_file('userparameter_foo.conf').only_with({
@@ -16,6 +17,7 @@ describe 'zabbix::agent::userparameter' do
       :owner    => 'root',
       :group    => 'root',
       :mode     => '0644',
+      :require  => 'File[/etc/zabbix_agentd.conf.d]',
       :notify   => 'Service[zabbix-agent]',
     })
   end
@@ -31,6 +33,7 @@ describe 'zabbix::agent::userparameter' do
         :owner    => 'root',
         :group    => 'root',
         :mode     => '0644',
+        :require  => 'File[/etc/zabbix_agentd.conf.d]',
         :notify   => 'Service[zabbix-agent]',
       })
     end
@@ -47,6 +50,7 @@ describe 'zabbix::agent::userparameter' do
         :owner    => 'root',
         :group    => 'root',
         :mode     => '0644',
+        :require  => 'File[/etc/zabbix_agentd.conf.d]',
         :notify   => 'Service[zabbix-agent]',
       })
     end

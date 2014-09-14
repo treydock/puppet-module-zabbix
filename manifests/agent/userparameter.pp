@@ -8,8 +8,6 @@ define zabbix::agent::userparameter (
 
   include zabbix::agent
 
-  Class['zabbix::agent'] -> Zabbix::Agent::Userparameter[$name]
-
   validate_re($ensure, '^(present|absent)$')
 
   if $content != undef {
@@ -28,6 +26,7 @@ define zabbix::agent::userparameter (
     owner   => 'root',
     group   => 'root',
     mode    => '0644',
+    require => File['/etc/zabbix_agentd.conf.d'],
     notify  => Service['zabbix-agent'],
   }
 
