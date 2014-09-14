@@ -63,10 +63,10 @@ class zabbix::agent (
 
   if $manage_firewall {
     firewall { '100 allow zabbix-agent':
-      ensure  => 'present',
-      port    => $listen_port,
-      proto   => 'tcp',
-      action  => 'accept',
+      ensure => 'present',
+      port   => $listen_port,
+      proto  => 'tcp',
+      action => 'accept',
     }
   }
 

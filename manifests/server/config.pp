@@ -10,9 +10,9 @@ class zabbix::server::config {
   }
 
   file { '/var/lib/zabbixsrv':
-    ensure  => 'directory',
-    path    => $::zabbix::server::user_home_dir,
-    mode    => '0750',
+    ensure => 'directory',
+    path   => $::zabbix::server::user_home_dir,
+    mode   => '0750',
   }
 
   file { '/var/lib/zabbixsrv/alertscripts':
@@ -37,17 +37,17 @@ class zabbix::server::config {
   }
 
   file { '/var/log/zabbixsrv':
-    ensure  => 'directory',
-    path    => $::zabbix::server::log_dir,
-    owner   => 'root',
-    mode    => '0775',
+    ensure => 'directory',
+    path   => $::zabbix::server::log_dir,
+    owner  => 'root',
+    mode   => '0775',
   }
 
   file { '/var/run/zabbixsrv':
-    ensure  => 'directory',
-    path    => $::zabbix::server::pid_dir,
-    owner   => 'root',
-    mode    => '0775',
+    ensure => 'directory',
+    path   => $::zabbix::server::pid_dir,
+    owner  => 'root',
+    mode   => '0775',
   }
 
   file { '/etc/zabbix_server.conf':
@@ -73,18 +73,18 @@ class zabbix::server::config {
     # not yet in the Forge.
     if $::zabbix::server::use_logrotate_rule {
       logrotate::rule { 'zabbix-server':
-        path          => $::zabbix::server::log_file,
-        missingok     => true,
-        rotate_every  => $::zabbix::server::logrotate_every,
-        ifempty       => false,
-        compress      => true,
-        create        => true,
-        create_mode   => '0664',
-        create_owner  => 'zabbixsrv',
-        create_group  => 'zabbixsrv',
-        su            => true,
-        su_owner      => 'zabbixsrv',
-        su_group      => 'zabbixsrv',
+        path         => $::zabbix::server::log_file,
+        missingok    => true,
+        rotate_every => $::zabbix::server::logrotate_every,
+        ifempty      => false,
+        compress     => true,
+        create       => true,
+        create_mode  => '0664',
+        create_owner => 'zabbixsrv',
+        create_group => 'zabbixsrv',
+        su           => true,
+        su_owner     => 'zabbixsrv',
+        su_group     => 'zabbixsrv',
       }
     } else {
       file { '/etc/logrotate.d/zabbix-server':

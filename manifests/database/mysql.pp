@@ -34,15 +34,15 @@ class zabbix::database::mysql (
   }
 
   mysql::db { 'zabbix':
-    ensure    => 'present',
-    user      => $db_user,
-    password  => $db_password,
-    dbname    => $db_name,
-    host      => $zabbix_server,
-    charset   => 'utf8',
-    collate   => 'utf8_bin',
-    grant     => ['ALL'],
-    notify    => Exec['zabbix-schema-import'],
+    ensure   => 'present',
+    user     => $db_user,
+    password => $db_password,
+    dbname   => $db_name,
+    host     => $zabbix_server,
+    charset  => 'utf8',
+    collate  => 'utf8_bin',
+    grant    => ['ALL'],
+    notify   => Exec['zabbix-schema-import'],
   }
 
   exec { 'zabbix-schema-import':

@@ -10,29 +10,29 @@ class zabbix::agent::config {
   }
 
   file { '/var/lib/zabbix':
-    ensure  => 'directory',
-    path    => $::zabbix::agent::user_home_dir,
-    mode    => '0750',
+    ensure => 'directory',
+    path   => $::zabbix::agent::user_home_dir,
+    mode   => '0750',
   }
 
   file { '/var/lib/zabbix/bin':
-    ensure  => 'directory',
-    path    => $::zabbix::agent::scripts_dir,
-    mode    => '0750',
+    ensure => 'directory',
+    path   => $::zabbix::agent::scripts_dir,
+    mode   => '0750',
   }
 
   file { '/var/log/zabbix':
-    ensure  => 'directory',
-    path    => $::zabbix::agent::log_dir,
-    owner   => 'root',
-    mode    => '0775',
+    ensure => 'directory',
+    path   => $::zabbix::agent::log_dir,
+    owner  => 'root',
+    mode   => '0775',
   }
 
   file { '/var/run/zabbix':
-    ensure  => 'directory',
-    path    => $::zabbix::agent::pid_dir,
-    owner   => 'root',
-    mode    => '0775',
+    ensure => 'directory',
+    path   => $::zabbix::agent::pid_dir,
+    owner  => 'root',
+    mode   => '0775',
   }
 
   file { '/etc/zabbix_agentd.conf':
@@ -60,18 +60,18 @@ class zabbix::agent::config {
     # not yet in the Forge.
     if $::zabbix::agent::use_logrotate_rule {
       logrotate::rule { 'zabbix-agent':
-        path          => $::zabbix::agent::log_file,
-        missingok     => true,
-        rotate_every  => $::zabbix::agent::logrotate_every,
-        ifempty       => false,
-        compress      => true,
-        create        => true,
-        create_mode   => '0664',
-        create_owner  => 'zabbix',
-        create_group  => 'zabbix',
-        su            => true,
-        su_owner      => 'zabbix',
-        su_group      => 'zabbix',
+        path         => $::zabbix::agent::log_file,
+        missingok    => true,
+        rotate_every => $::zabbix::agent::logrotate_every,
+        ifempty      => false,
+        compress     => true,
+        create       => true,
+        create_mode  => '0664',
+        create_owner => 'zabbix',
+        create_group => 'zabbix',
+        su           => true,
+        su_owner     => 'zabbix',
+        su_group     => 'zabbix',
       }
     } else {
       file { '/etc/logrotate.d/zabbix-agent':

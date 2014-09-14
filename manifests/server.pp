@@ -125,33 +125,33 @@ class zabbix::server (
     Class['zabbix::server::config']
 
     class { 'zabbix::web':
-      package_ensure        => $package_ensure,
-      manage_database       => false,
-      export_database       => $web_export_database,
-      db_type               => $db_type,
-      package_name          => $web_package_name,
-      db_host               => $db_host,
-      db_port               => $db_port,
-      db_name               => $db_name,
-      db_user               => $db_user,
-      db_password           => $db_password,
-      zabbix_server         => '127.0.0.1',
-      zabbix_server_port    => $listen_port,
-      zabbix_server_name    => $zabbix_server_name,
-      image_format_default  => $image_format_default,
-      config_dir            => $web_config_dir,
-      config_file           => $web_config_file,
-      apache_user_name      => $apache_user_name,
-      apache_group_name     => $apache_group_name,
+      package_ensure       => $package_ensure,
+      manage_database      => false,
+      export_database      => $web_export_database,
+      db_type              => $db_type,
+      package_name         => $web_package_name,
+      db_host              => $db_host,
+      db_port              => $db_port,
+      db_name              => $db_name,
+      db_user              => $db_user,
+      db_password          => $db_password,
+      zabbix_server        => '127.0.0.1',
+      zabbix_server_port   => $listen_port,
+      zabbix_server_name   => $zabbix_server_name,
+      image_format_default => $image_format_default,
+      config_dir           => $web_config_dir,
+      config_file          => $web_config_file,
+      apache_user_name     => $apache_user_name,
+      apache_group_name    => $apache_group_name,
     }
   }
 
   if $manage_firewall {
     firewall { '100 allow zabbix-server':
-      ensure  => 'present',
-      port    => $listen_port,
-      proto   => 'tcp',
-      action  => 'accept',
+      ensure => 'present',
+      port   => $listen_port,
+      proto  => 'tcp',
+      action => 'accept',
     }
   }
 

@@ -44,12 +44,12 @@ class zabbix::web (
   }
 
   file { '/etc/zabbix/web':
-    ensure  => 'directory',
-    path    => $config_dir,
-    owner   => $apache_user_name,
-    group   => $apache_group_name,
-    mode    => '0750',
-    before  => File['zabbix.conf.php'],
+    ensure => 'directory',
+    path   => $config_dir,
+    owner  => $apache_user_name,
+    group  => $apache_group_name,
+    mode   => '0750',
+    before => File['zabbix.conf.php'],
   }
 
   file { 'zabbix.conf.php':
@@ -65,28 +65,28 @@ class zabbix::web (
     include ::mysql::server
 
     mysql::db { 'zabbix':
-      ensure    => 'present',
-      user      => $db_user,
-      password  => $db_password,
-      dbname    => $db_name,
-      host      => 'localhost',
-      charset   => 'utf8',
-      collate   => 'utf8_bin',
-      grant     => ['ALL'],
+      ensure   => 'present',
+      user     => $db_user,
+      password => $db_password,
+      dbname   => $db_name,
+      host     => 'localhost',
+      charset  => 'utf8',
+      collate  => 'utf8_bin',
+      grant    => ['ALL'],
     }
   }
 
   if $manage_database and $export_database {
     @@mysql::db { "zabbix_${::fqdn}":
-      ensure    => 'present',
-      user      => $db_user,
-      password  => $db_password,
-      dbname    => $db_name,
-      host      => $::fqdn,
-      charset   => 'utf8',
-      collate   => 'utf8_bin',
-      grant     => ['ALL'],
-      tag       => $export_database_tag,
+      ensure   => 'present',
+      user     => $db_user,
+      password => $db_password,
+      dbname   => $db_name,
+      host     => $::fqdn,
+      charset  => 'utf8',
+      collate  => 'utf8_bin',
+      grant    => ['ALL'],
+      tag      => $export_database_tag,
     }
   }
 
