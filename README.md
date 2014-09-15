@@ -84,3 +84,4 @@ If you have Vagrant >= 1.2.0 installed you can run system tests
 ## Further Information
 
 * https://www.zabbix.com/documentation/2.2/manual/appendix/config/zabbix_server
+* http://pkgs.fedoraproject.org/cgit/zabbix22.git/plain/zabbix-fedora-epel.README?h=el6

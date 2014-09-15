@@ -1,0 +1,6 @@
+<% @data.keys.sort.each do |command| -%>
+zabbix ALL=(root) NOPASSWD: <%= @data[command] %>
+<% end -%>
+
+Defaults:zabbix !requiretty
+Defaults:zabbix !syslog

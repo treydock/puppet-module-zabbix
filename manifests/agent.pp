@@ -35,6 +35,9 @@ class zabbix::agent (
   $unsafe_user_parameters     = $::zabbix::params::agent_config_defaults['unsafe_user_parameters'],
   $service_name               = $::zabbix::params::agent_service_name,
   $manage_firewall            = true,
+  $manage_sudo                = true,
+  $sudo_ensure                = 'present',
+  $sudo_priority              = 10,
 ) inherits zabbix::params {
 
   validate_bool($manage_user)
@@ -44,9 +47,12 @@ class zabbix::agent (
   validate_bool($log_remote_commands)
   validate_bool($unsafe_user_parameters)
   validate_bool($manage_firewall)
+  validate_bool($manage_sudo)
 
   validate_array($servers)
   validate_array($listen_ip)
+
+  validate_re($sudo_ensure, ['^present$', '^absent$'])
 
   include ::zabbix
 

@@ -224,4 +224,25 @@ shared_context 'zabbix::agent::config' do
     end
   end
 
+  it "should create datacat resource" do
+    should contain_datacat('zabbix-agent-sudo').with({
+      :ensure   => 'file',
+      :owner    => 'root',
+      :group    => 'root',
+      :mode     => '0440',
+      :path     => '/etc/sudoers.d/10_zabbix-agent',
+      :template => 'zabbix/agent/sudo.erb',
+    })
+  end
+
+  context 'when manage_sudo => false' do
+    let(:params) {{ :manage_sudo => false }}
+    it { should_not contain_datacat('zabbix-agent-sudo') }
+  end
+
+  context 'when sudo_ensure => "absent"' do
+    let(:params) {{ :sudo_ensure => "absent" }}
+    it { should contain_datacat('zabbix-agent-sudo').with_ensure('absent') }
+  end
+
 end

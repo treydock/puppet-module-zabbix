@@ -4,6 +4,11 @@ class zabbix::agent::config {
 
   include ::zabbix::agent
 
+  $sudo_ensure = $::zabbix::agent::sudo_ensure ? {
+    'present' => 'file',
+    'absent'  => 'absent',
+  }
+
   File {
     owner => 'zabbix',
     group => 'zabbix',
@@ -81,6 +86,17 @@ class zabbix::agent::config {
         mode    => '0444',
         content => template('zabbix/agent/logrotate/zabbix-agent.erb'),
       }
+    }
+  }
+
+  if $::zabbix::agent::manage_sudo {
+    datacat { 'zabbix-agent-sudo':
+      ensure   => $sudo_ensure,
+      owner    => 'root',
+      group    => 'root',
+      mode     => '0440',
+      path     => "/etc/sudoers.d/${::zabbix::agent::sudo_priority}_zabbix-agent",
+      template => 'zabbix/agent/sudo.erb',
     }
   }
 
