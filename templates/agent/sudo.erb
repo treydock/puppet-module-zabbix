@@ -1,5 +1,5 @@
 <% @data.keys.sort.each do |command| -%>
-zabbix ALL=(root) NOPASSWD: <%= @data[command] %>
+zabbix ALL=(root) NOPASSWD: <%= @data[command].join(',') %>
 <% end -%>
 
 Defaults:zabbix !requiretty
