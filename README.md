@@ -1,6 +1,6 @@
-# puppet-zabbix
+# puppet-module-zabbix
 
-[![Build Status](https://travis-ci.org/treydock/puppet-zabbix.png)](https://travis-ci.org/treydock/puppet-zabbix)
+[![Build Status](https://travis-ci.org/treydock/puppet-module-zabbix.png)](https://travis-ci.org/treydock/puppet-module-zabbix)
 
 ####Table of Contents
 
