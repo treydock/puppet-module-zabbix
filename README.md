@@ -29,9 +29,15 @@ This module manages Zabbix agents and servers.
 * `zabbix::agent`: Installs and configures a Zabbix agent.
 * `zabbix::server`: Installs and configures a Zabbix server.
 * `zabbix::database::mysql`: Configures MySQL for a Zabbix server.
+* `zabbix::web`: Installs and configures the Zabbix web interface.
 
 #### Private classes
 
+* `zabbix::agent::user`: Manages the zabbix agent user and group.
+* `zabbix::agent::install`: Installs zabbix agent packages.
+* `zabbix::agent::config`: Configures zabbix agent.
+* `zabbix::agent::service`: Manages the zabbix-agent service.
+* `zabbix::server::user`: Manages the zabbix server user and group.
 * `zabbix::server::install`: Installs zabbix server packages.
 * `zabbix::server::config`: Configures zabbix server.
 * `zabbix::server::service`: Manages the zabbix-server service.
@@ -48,6 +54,20 @@ TODO
 TODO
 
 #### zabbix::database::mysql
+
+TODO
+
+#### zabbix::web
+
+TODO
+
+### Defines
+
+#### zabbix::agent::sudo
+
+TODO
+
+#### zabbix::agent::userparameter
 
 TODO
 
@@ -80,6 +100,8 @@ If you have Vagrant >= 1.2.0 installed you can run system tests
     bundle exec rake beaker
 
 ## TODO
+
+* Conditionally manage the Zabbix web interface's Apache configuration
 
 ## Further Information
 
