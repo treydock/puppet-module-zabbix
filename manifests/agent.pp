@@ -13,6 +13,7 @@ class zabbix::agent (
   $config_file                = $::zabbix::params::agent_config_file,
   $scripts_dir                = $::zabbix::params::agent_scripts_dir,
   $manage_logrotate           = $::zabbix::params::agent_manage_logrotate,
+  $logrotate_defaults         = $::zabbix::params::agent_logrotate_defaults,
   $use_logrotate_rule         = $::zabbix::params::agent_use_logrotate_rule,
   $logrotate_every            = $::zabbix::params::agent_logrotate_every,
   $servers                    = $::zabbix::params::servers,
@@ -53,6 +54,15 @@ class zabbix::agent (
   validate_array($listen_ip)
 
   validate_re($sudo_ensure, ['^present$', '^absent$'])
+
+  validate_hash($logrotate_defaults)
+
+  $logrotate_local_params = {
+    'path'          => $log_file,
+    'rotate_every'  => $logrotate_every
+  }
+
+  $logrotate_params = merge($logrotate_defaults, $logrotate_local_params)
 
   include ::zabbix
 

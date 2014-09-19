@@ -38,8 +38,8 @@ shared_context 'zabbix::agent::config' do
     should contain_file('/var/run/zabbix').only_with({
       :ensure   => 'directory',
       :path     => '/var/run/zabbix',
-      :mode     => '0775',
-      :owner    => 'root',
+      :mode     => '0755',
+      :owner    => 'zabbix',
       :group    => 'zabbix',
     })
   end
@@ -185,7 +185,6 @@ shared_context 'zabbix::agent::config' do
       '  missingok',
       '  monthly',
       '  notifempty',
-      '  su zabbix zabbix',
       '}',
     ])
   end
@@ -204,9 +203,7 @@ shared_context 'zabbix::agent::config' do
         :create_mode  => '0664',
         :create_owner => 'zabbix',
         :create_group => 'zabbix',
-        :su           => 'true',
-        :su_owner     => 'zabbix',
-        :su_group     => 'zabbix',
+        :su           => 'false',
       })
     end
 
@@ -218,7 +215,6 @@ shared_context 'zabbix::agent::config' do
         '  missingok',
         '  monthly',
         '  notifempty',
-        '  su zabbix zabbix',
         '}',
       ])
     end
@@ -245,4 +241,56 @@ shared_context 'zabbix::agent::config' do
     it { should contain_datacat('zabbix-agent-sudo').with_ensure('absent') }
   end
 
+  context "when operatingsystemmajrelease == 7" do
+    let(:facts) { default_facts.merge({:operatingsystemmajrelease => '7'}) }
+
+    it 'File[/etc/logrotate.d/zabbix-agent] should have valid contents' do
+      verify_contents(catalogue, '/etc/logrotate.d/zabbix-agent', [
+        '/var/log/zabbix/zabbix_agentd.log {',
+        '  compress',
+        '  create 0664 zabbix zabbix',
+        '  missingok',
+        '  monthly',
+        '  notifempty',
+        '  su zabbix zabbix',
+        '}',
+      ])
+    end
+
+    it { should_not contain_logrotate__rule('zabbix-agent') }
+
+    context 'when use_logrotate_rule => true' do
+      let(:params) {{ :use_logrotate_rule => true }}
+
+      it 'should manage logrotate::rule[zabbix-agent]' do
+        should contain_logrotate__rule('zabbix-agent').with({
+          :path         => '/var/log/zabbix/zabbix_agentd.log',
+          :missingok    => 'true',
+          :rotate_every => 'monthly',
+          :ifempty      => 'false',
+          :compress     => 'true',
+          :create       => 'true',
+          :create_mode  => '0664',
+          :create_owner => 'zabbix',
+          :create_group => 'zabbix',
+          :su           => 'true',
+          :su_owner     => 'zabbix',
+          :su_group     => 'zabbix',
+        })
+      end
+
+      it 'File[/etc/logrotate.d/zabbix-agent] should have valid contents' do
+        verify_contents(catalogue, '/etc/logrotate.d/zabbix-agent', [
+          '/var/log/zabbix/zabbix_agentd.log {',
+          '  compress',
+          '  create 0664 zabbix zabbix',
+          '  missingok',
+          '  monthly',
+          '  notifempty',
+          '  su zabbix zabbix',
+          '}',
+        ])
+      end
+    end
+  end
 end

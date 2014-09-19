@@ -46,8 +46,7 @@ class zabbix::server::config {
   file { '/var/run/zabbixsrv':
     ensure => 'directory',
     path   => $::zabbix::server::pid_dir,
-    owner  => 'root',
-    mode   => '0775',
+    mode   => '0755',
   }
 
   file { '/etc/zabbix_server.conf':
@@ -72,27 +71,18 @@ class zabbix::server::config {
     # because the version that supports 'su' is
     # not yet in the Forge.
     if $::zabbix::server::use_logrotate_rule {
-      logrotate::rule { 'zabbix-server':
-        path         => $::zabbix::server::log_file,
-        missingok    => true,
-        rotate_every => $::zabbix::server::logrotate_every,
-        ifempty      => false,
-        compress     => true,
-        create       => true,
-        create_mode  => '0664',
-        create_owner => 'zabbixsrv',
-        create_group => 'zabbixsrv',
-        su           => true,
-        su_owner     => 'zabbixsrv',
-        su_group     => 'zabbixsrv',
+      $logrotate_rule = {
+        'zabbix-server' => $::zabbix::server::logrotate_params,
       }
+
+      create_resources('logrotate::rule', $logrotate_rule)
     } else {
       file { '/etc/logrotate.d/zabbix-server':
         ensure  => 'file',
         owner   => 'root',
         group   => 'root',
         mode    => '0444',
-        content => template('zabbix/server/logrotate/zabbix-server.erb'),
+        content => template('zabbix/logrotate/zabbix-server.erb'),
       }
     }
   }

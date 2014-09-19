@@ -61,8 +61,8 @@ shared_context 'zabbix::server::config' do
     should contain_file('/var/run/zabbixsrv').only_with({
       :ensure   => 'directory',
       :path     => '/var/run/zabbixsrv',
-      :mode     => '0775',
-      :owner    => 'root',
+      :mode     => '0755',
+      :owner    => 'zabbixsrv',
       :group    => 'zabbixsrv',
     })
   end
@@ -175,7 +175,6 @@ shared_context 'zabbix::server::config' do
       '  missingok',
       '  monthly',
       '  notifempty',
-      '  su zabbixsrv zabbixsrv',
       '}',
     ])
   end
@@ -194,11 +193,24 @@ shared_context 'zabbix::server::config' do
         :create_mode  => '0664',
         :create_owner => 'zabbixsrv',
         :create_group => 'zabbixsrv',
-        :su           => 'true',
-        :su_owner     => 'zabbixsrv',
-        :su_group     => 'zabbixsrv',
+        :su           => 'false',
       })
     end
+
+    it 'File[/etc/logrotate.d/zabbix-server] should have valid contents' do
+      verify_contents(catalogue, '/etc/logrotate.d/zabbix-server', [
+        '/var/log/zabbixsrv/zabbix_server.log {',
+        '  compress',
+        '  create 0664 zabbixsrv zabbixsrv',
+        '  missingok',
+        '  monthly',
+        '  notifempty',
+        '}',
+      ])
+    end
+  end
+  context "when operatingsystemmajrelease == 7" do
+    let(:facts) { default_facts.merge({:operatingsystemmajrelease => '7'}) }
 
     it 'File[/etc/logrotate.d/zabbix-server] should have valid contents' do
       verify_contents(catalogue, '/etc/logrotate.d/zabbix-server', [
@@ -211,6 +223,42 @@ shared_context 'zabbix::server::config' do
         '  su zabbixsrv zabbixsrv',
         '}',
       ])
+    end
+
+    it { should_not contain_logrotate__rule('zabbix-server') }
+
+    context 'when use_logrotate_rule => true' do
+      let(:params) {{ :use_logrotate_rule => true }}
+
+      it 'should manage logrotate::rule[zabbix-server]' do
+        should contain_logrotate__rule('zabbix-server').with({
+          :path         => '/var/log/zabbixsrv/zabbix_server.log',
+          :missingok    => 'true',
+          :rotate_every => 'monthly',
+          :ifempty      => 'false',
+          :compress     => 'true',
+          :create       => 'true',
+          :create_mode  => '0664',
+          :create_owner => 'zabbixsrv',
+          :create_group => 'zabbixsrv',
+          :su           => 'true',
+          :su_owner     => 'zabbixsrv',
+          :su_group     => 'zabbixsrv',
+        })
+      end
+
+      it 'File[/etc/logrotate.d/zabbix-server] should have valid contents' do
+        verify_contents(catalogue, '/etc/logrotate.d/zabbix-server', [
+          '/var/log/zabbixsrv/zabbix_server.log {',
+          '  compress',
+          '  create 0664 zabbixsrv zabbixsrv',
+          '  missingok',
+          '  monthly',
+          '  notifempty',
+          '  su zabbixsrv zabbixsrv',
+          '}',
+        ])
+      end
     end
   end
 

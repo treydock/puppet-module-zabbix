@@ -1,0 +1,12 @@
+<%= @logrotate_params['path'] %> {
+  <%= @logrotate_params['compress'] ? "compress" : "nocompress" %>
+<% if @logrotate_params['create'] -%>
+  create <%= @logrotate_params['create_mode'] %> <%= @logrotate_params['create_owner'] %> <%= @logrotate_params['create_group'] %>
+<% end -%>
+  <%= @logrotate_params['missingok'] ? "missingok" : "nomissingok" %>
+  <%= @logrotate_params['rotate_every'] %>
+  <%= @logrotate_params['ifempty'] ? "ifempty" : "notifempty" %>
+<% if @logrotate_params['su'] -%>
+  su <%= @logrotate_params['su_owner'] %> <%= @logrotate_params['su_group'] %>
+<% end -%>
+}

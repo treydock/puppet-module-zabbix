@@ -141,6 +141,54 @@ class zabbix::params {
       $web_packages               = {
         'mysql'   => 'zabbix22-web-mysql',
       }
+
+      if $::operatingsystemmajrelease >= 7 {
+        $agent_logrotate_defaults   = {
+          'missingok'     => true,
+          'ifempty'       => false,
+          'compress'      => true,
+          'create'        => true,
+          'create_mode'   => '0664',
+          'create_owner'  => 'zabbix',
+          'create_group'  => 'zabbix',
+          'su'            => true,
+          'su_owner'      => 'zabbix',
+          'su_group'      => 'zabbix',
+        }
+        $server_logrotate_defaults  = {
+          'missingok'     => true,
+          'ifempty'       => false,
+          'compress'      => true,
+          'create'        => true,
+          'create_mode'   => '0664',
+          'create_owner'  => 'zabbixsrv',
+          'create_group'  => 'zabbixsrv',
+          'su'            => true,
+          'su_owner'      => 'zabbixsrv',
+          'su_group'      => 'zabbixsrv',
+        }
+      } else {
+        $agent_logrotate_defaults = {
+          'missingok'     => true,
+          'ifempty'       => false,
+          'compress'      => true,
+          'create'        => true,
+          'create_mode'   => '0664',
+          'create_owner'  => 'zabbix',
+          'create_group'  => 'zabbix',
+          'su'            => false,
+        }
+        $server_logrotate_defaults = {
+          'missingok'     => true,
+          'ifempty'       => false,
+          'compress'      => true,
+          'create'        => true,
+          'create_mode'   => '0664',
+          'create_owner'  => 'zabbixsrv',
+          'create_group'  => 'zabbixsrv',
+          'su'            => false,
+        }
+      }
     }
 
     default: {

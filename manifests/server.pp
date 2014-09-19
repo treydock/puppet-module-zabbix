@@ -37,6 +37,7 @@ class zabbix::server (
   $config_d_dir               = $::zabbix::params::server_config_d_dir,
   $config_file                = $::zabbix::params::server_config_file,
   $manage_logrotate           = $::zabbix::params::server_manage_logrotate,
+  $logrotate_defaults         = $::zabbix::params::server_logrotate_defaults,
   $use_logrotate_rule         = $::zabbix::params::server_use_logrotate_rule,
   $logrotate_every            = $::zabbix::params::server_logrotate_every,
   $listen_port                = $::zabbix::params::server_listen_port,
@@ -85,6 +86,15 @@ class zabbix::server (
 
   #validate_re($db_type, ['^mysql$','^pgsql$','^sqlite$'])
   validate_re($db_type, ['^mysql$'])
+
+  validate_hash($logrotate_defaults)
+
+  $logrotate_local_params = {
+    'path'          => $log_file,
+    'rotate_every'  => $logrotate_every
+  }
+
+  $logrotate_params = merge($logrotate_defaults, $logrotate_local_params)
 
   include ::zabbix
 

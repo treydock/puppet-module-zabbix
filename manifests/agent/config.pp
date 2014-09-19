@@ -36,8 +36,7 @@ class zabbix::agent::config {
   file { '/var/run/zabbix':
     ensure => 'directory',
     path   => $::zabbix::agent::pid_dir,
-    owner  => 'root',
-    mode   => '0775',
+    mode   => '0755',
   }
 
   file { '/etc/zabbix_agentd.conf':
@@ -64,27 +63,18 @@ class zabbix::agent::config {
     # because the version that supports 'su' is
     # not yet in the Forge.
     if $::zabbix::agent::use_logrotate_rule {
-      logrotate::rule { 'zabbix-agent':
-        path         => $::zabbix::agent::log_file,
-        missingok    => true,
-        rotate_every => $::zabbix::agent::logrotate_every,
-        ifempty      => false,
-        compress     => true,
-        create       => true,
-        create_mode  => '0664',
-        create_owner => 'zabbix',
-        create_group => 'zabbix',
-        su           => true,
-        su_owner     => 'zabbix',
-        su_group     => 'zabbix',
+      $logrotate_rule = {
+        'zabbix-agent' => $::zabbix::agent::logrotate_params,
       }
+
+      create_resources('logrotate::rule', $logrotate_rule)
     } else {
       file { '/etc/logrotate.d/zabbix-agent':
         ensure  => 'file',
         owner   => 'root',
         group   => 'root',
         mode    => '0444',
-        content => template('zabbix/agent/logrotate/zabbix-agent.erb'),
+        content => template('zabbix/logrotate/zabbix-agent.erb'),
       }
     }
   }

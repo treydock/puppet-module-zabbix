@@ -1,8 +1,0 @@
-<%= scope.lookupvar('zabbix::server::log_file') %> {
-  compress
-  create 0664 zabbixsrv zabbixsrv
-  missingok
-  <%= scope.lookupvar('zabbix::server::logrotate_every') %>
-  notifempty
-  su zabbixsrv zabbixsrv
-}
