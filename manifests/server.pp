@@ -35,6 +35,7 @@ class zabbix::server (
   $apache_group_name          = $::zabbix::params::apache_group_name,
   # zabbix-server
   $config_d_dir               = $::zabbix::params::server_config_d_dir,
+  $purge_config_d_dir         = true,
   $config_file                = $::zabbix::params::server_config_file,
   $manage_logrotate           = $::zabbix::params::server_manage_logrotate,
   $logrotate_defaults         = $::zabbix::params::server_logrotate_defaults,
@@ -79,6 +80,7 @@ class zabbix::server (
   validate_bool($manage_user)
   validate_bool($manage_database)
   validate_bool($manage_web)
+  validate_bool($purge_config_d_dir)
   validate_bool($manage_logrotate)
   validate_bool($use_logrotate_rule)
   validate_bool($start_snmp_trapper)

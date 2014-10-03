@@ -55,7 +55,6 @@ shared_context 'zabbix::agent::config' do
     })
   end
 
-
   it 'should have valid contents for zabbix_agentd.conf' do
     verify_contents(catalogue, '/etc/zabbix_agentd.conf', [
       'PidFile=/var/run/zabbix/zabbix_agentd.pid',
@@ -99,6 +98,11 @@ shared_context 'zabbix::agent::config' do
       :recurse  => 'true',
       :purge    => 'true',
     })
+  end
+
+  context 'when purge_config_d_dir => false' do
+    let(:params) {{ :purge_config_d_dir => false }}
+    it { should contain_file('/etc/zabbix_agentd.conf.d').with_purge('false') }
   end
 
   context "when servers => ['192.168.1.1','192.168.1.2']" do

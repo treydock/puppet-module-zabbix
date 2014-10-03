@@ -156,6 +156,11 @@ shared_context 'zabbix::server::config' do
     })
   end
 
+  context 'when purge_config_d_dir => false' do
+    let(:params) {{ :purge_config_d_dir => false }}
+    it { should contain_file('/etc/zabbix_server.conf.d').with_purge('false') }
+  end
+
   it 'should manage File[/etc/logrotate.d/zabbix-server]' do
     should contain_file('/etc/logrotate.d/zabbix-server').with({
       :ensure  => 'file',

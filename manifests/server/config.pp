@@ -63,7 +63,7 @@ class zabbix::server::config {
     owner   => 'root',
     mode    => '0750',
     recurse => true,
-    purge   => true,
+    purge   => $::zabbix::server::purge_config_d_dir,
   }
 
   if $::zabbix::server::manage_logrotate {

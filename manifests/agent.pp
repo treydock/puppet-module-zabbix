@@ -10,6 +10,7 @@ class zabbix::agent (
   $package_ensure             = 'present',
   $package_name               = $::zabbix::params::agent_package_name,
   $config_d_dir               = $::zabbix::params::agent_config_d_dir,
+  $purge_config_d_dir         = true,
   $config_file                = $::zabbix::params::agent_config_file,
   $scripts_dir                = $::zabbix::params::agent_scripts_dir,
   $manage_logrotate           = $::zabbix::params::agent_manage_logrotate,
@@ -42,6 +43,7 @@ class zabbix::agent (
 ) inherits zabbix::params {
 
   validate_bool($manage_user)
+  validate_bool($purge_config_d_dir)
   validate_bool($manage_logrotate)
   validate_bool($use_logrotate_rule)
   validate_bool($enable_remote_commands)

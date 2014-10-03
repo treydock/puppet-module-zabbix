@@ -55,7 +55,7 @@ class zabbix::agent::config {
     group   => 'root',
     mode    => '0755',
     recurse => true,
-    purge   => true,
+    purge   => $::zabbix::agent::purge_config_d_dir,
   }
 
   if $::zabbix::agent::manage_logrotate {
