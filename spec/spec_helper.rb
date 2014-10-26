@@ -15,16 +15,4 @@ end
 dir = File.expand_path(File.dirname(__FILE__))
 Dir["#{dir}/support/**/*.rb"].sort.each {|f| require f}
 
-shared_context :defaults do
-  let :default_facts do
-    {
-      :fqdn                       => 'foo.example.com',
-      :domain                     => 'example.com',
-      :osfamily                   => 'RedHat',
-      :root_home                  => '/root',
-      :operatingsystemmajrelease  => '6',
-    }
-  end
-end
-
 at_exit { RSpec::Puppet::Coverage.report! }

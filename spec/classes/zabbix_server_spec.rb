@@ -1,8 +1,15 @@
 require 'spec_helper'
 
 describe 'zabbix::server' do
-  include_context :defaults
-  let(:facts) { default_facts }
+  let :facts do
+    {
+      :fqdn                       => 'foo.example.com',
+      :domain                     => 'example.com',
+      :osfamily                   => 'RedHat',
+      :root_home                  => '/root',
+      :operatingsystemmajrelease  => '6',
+    }
+  end
 
   it { should create_class('zabbix::server') }
   it { should contain_class('zabbix::params') }

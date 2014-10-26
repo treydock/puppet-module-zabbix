@@ -1,9 +1,15 @@
 require 'spec_helper'
 
 describe 'zabbix::agent::sudo' do
-  include_context :defaults
-
-  let(:facts){ default_facts }
+  let :facts do
+    {
+      :fqdn                       => 'foo.example.com',
+      :domain                     => 'example.com',
+      :osfamily                   => 'RedHat',
+      :root_home                  => '/root',
+      :operatingsystemmajrelease  => '6',
+    }
+  end
 
   let(:title) { 'foo' }
   let(:params) {{ :command => '/usr/bin/bar' }}

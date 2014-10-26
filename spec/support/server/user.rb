@@ -1,6 +1,4 @@
 shared_context 'zabbix::server::user' do
-  let(:facts) { default_facts }
-
   it { should create_class('zabbix::server::user') }
   it { should contain_class('zabbix::server') }
 

@@ -1,6 +1,4 @@
 shared_context 'zabbix::agent::install' do
-  let(:facts) { default_facts }
-
   it { should create_class('zabbix::agent::install') }
   it { should contain_class('zabbix::agent') }
   it { should contain_class('epel') }

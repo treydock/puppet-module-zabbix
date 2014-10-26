@@ -1,6 +1,4 @@
 shared_context 'zabbix::agent::config' do
-  let(:facts) { default_facts }
-
   it { should create_class('zabbix::agent::config') }
   it { should contain_class('zabbix::agent') }
 
@@ -246,7 +244,15 @@ shared_context 'zabbix::agent::config' do
   end
 
   context "when operatingsystemmajrelease == 7" do
-    let(:facts) { default_facts.merge({:operatingsystemmajrelease => '7'}) }
+    let :facts do
+      {
+        :fqdn                       => 'foo.example.com',
+        :domain                     => 'example.com',
+        :osfamily                   => 'RedHat',
+        :root_home                  => '/root',
+        :operatingsystemmajrelease  => '7',
+      }
+    end
 
     it 'File[/etc/logrotate.d/zabbix-agent] should have valid contents' do
       verify_contents(catalogue, '/etc/logrotate.d/zabbix-agent', [
