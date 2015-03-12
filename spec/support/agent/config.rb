@@ -1,4 +1,4 @@
-shared_context 'zabbix::agent::config' do
+shared_context 'zabbix::agent::config' do |facts|
   it { should create_class('zabbix::agent::config') }
   it { should contain_class('zabbix::agent') }
 
@@ -179,36 +179,7 @@ shared_context 'zabbix::agent::config' do
 
   it { should_not contain_logrotate__rule('zabbix-agent') }
 
-  it 'File[/etc/logrotate.d/zabbix-agent] should have valid contents' do
-    verify_contents(catalogue, '/etc/logrotate.d/zabbix-agent', [
-      '/var/log/zabbix/zabbix_agentd.log {',
-      '  compress',
-      '  create 0664 zabbix zabbix',
-      '  missingok',
-      '  monthly',
-      '  notifempty',
-      '}',
-    ])
-  end
-
-  context 'when use_logrotate_rule => true' do
-    let(:params) {{ :use_logrotate_rule => true }}
-
-    it 'should manage logrotate::rule[zabbix-agent]' do
-      should contain_logrotate__rule('zabbix-agent').with({
-        :path         => '/var/log/zabbix/zabbix_agentd.log',
-        :missingok    => 'true',
-        :rotate_every => 'monthly',
-        :ifempty      => 'false',
-        :compress     => 'true',
-        :create       => 'true',
-        :create_mode  => '0664',
-        :create_owner => 'zabbix',
-        :create_group => 'zabbix',
-        :su           => 'false',
-      })
-    end
-
+  if facts[:operatingsystemmajrelease].to_i < 7
     it 'File[/etc/logrotate.d/zabbix-agent] should have valid contents' do
       verify_contents(catalogue, '/etc/logrotate.d/zabbix-agent', [
         '/var/log/zabbix/zabbix_agentd.log {',
@@ -220,40 +191,7 @@ shared_context 'zabbix::agent::config' do
         '}',
       ])
     end
-  end
-
-  it "should create datacat resource" do
-    should contain_datacat('zabbix-agent-sudo').with({
-      :ensure   => 'file',
-      :owner    => 'root',
-      :group    => 'root',
-      :mode     => '0440',
-      :path     => '/etc/sudoers.d/10_zabbix-agent',
-      :template => 'zabbix/agent/sudo.erb',
-    })
-  end
-
-  context 'when manage_sudo => false' do
-    let(:params) {{ :manage_sudo => false }}
-    it { should_not contain_datacat('zabbix-agent-sudo') }
-  end
-
-  context 'when sudo_ensure => "absent"' do
-    let(:params) {{ :sudo_ensure => "absent" }}
-    it { should contain_datacat('zabbix-agent-sudo').with_ensure('absent') }
-  end
-
-  context "when operatingsystemmajrelease == 7" do
-    let :facts do
-      {
-        :fqdn                       => 'foo.example.com',
-        :domain                     => 'example.com',
-        :osfamily                   => 'RedHat',
-        :root_home                  => '/root',
-        :operatingsystemmajrelease  => '7',
-      }
-    end
-
+  else
     it 'File[/etc/logrotate.d/zabbix-agent] should have valid contents' do
       verify_contents(catalogue, '/etc/logrotate.d/zabbix-agent', [
         '/var/log/zabbix/zabbix_agentd.log {',
@@ -266,12 +204,39 @@ shared_context 'zabbix::agent::config' do
         '}',
       ])
     end
+  end
 
-    it { should_not contain_logrotate__rule('zabbix-agent') }
+  context 'when use_logrotate_rule => true' do
+    let(:params) {{ :use_logrotate_rule => true }}
 
-    context 'when use_logrotate_rule => true' do
-      let(:params) {{ :use_logrotate_rule => true }}
+    if facts[:operatingsystemmajrelease].to_i < 7
+      it 'should manage logrotate::rule[zabbix-agent]' do
+        should contain_logrotate__rule('zabbix-agent').with({
+          :path         => '/var/log/zabbix/zabbix_agentd.log',
+          :missingok    => 'true',
+          :rotate_every => 'monthly',
+          :ifempty      => 'false',
+          :compress     => 'true',
+          :create       => 'true',
+          :create_mode  => '0664',
+          :create_owner => 'zabbix',
+          :create_group => 'zabbix',
+          :su           => 'false',
+        })
+      end
 
+      it 'File[/etc/logrotate.d/zabbix-agent] should have valid contents' do
+        verify_contents(catalogue, '/etc/logrotate.d/zabbix-agent', [
+          '/var/log/zabbix/zabbix_agentd.log {',
+          '  compress',
+          '  create 0664 zabbix zabbix',
+          '  missingok',
+          '  monthly',
+          '  notifempty',
+          '}',
+        ])
+      end
+    else
       it 'should manage logrotate::rule[zabbix-agent]' do
         should contain_logrotate__rule('zabbix-agent').with({
           :path         => '/var/log/zabbix/zabbix_agentd.log',
@@ -302,5 +267,26 @@ shared_context 'zabbix::agent::config' do
         ])
       end
     end
+  end
+
+  it "should create datacat resource" do
+    should contain_datacat('zabbix-agent-sudo').with({
+      :ensure   => 'file',
+      :owner    => 'root',
+      :group    => 'root',
+      :mode     => '0440',
+      :path     => '/etc/sudoers.d/10_zabbix-agent',
+      :template => 'zabbix/agent/sudo.erb',
+    })
+  end
+
+  context 'when manage_sudo => false' do
+    let(:params) {{ :manage_sudo => false }}
+    it { should_not contain_datacat('zabbix-agent-sudo') }
+  end
+
+  context 'when sudo_ensure => "absent"' do
+    let(:params) {{ :sudo_ensure => "absent" }}
+    it { should contain_datacat('zabbix-agent-sudo').with_ensure('absent') }
   end
 end

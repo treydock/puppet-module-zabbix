@@ -142,8 +142,8 @@ class zabbix::params {
         'mysql'   => 'zabbix22-web-mysql',
       }
 
-      if $::operatingsystemmajrelease >= 7 {
-        $agent_logrotate_defaults   = {
+      if versioncmp($::operatingsystemmajrelease, '7') >= 0 {
+        $agent_logrotate_defaults = {
           'missingok'     => true,
           'ifempty'       => false,
           'compress'      => true,
@@ -155,7 +155,7 @@ class zabbix::params {
           'su_owner'      => 'zabbix',
           'su_group'      => 'zabbix',
         }
-        $server_logrotate_defaults  = {
+        $server_logrotate_defaults = {
           'missingok'     => true,
           'ifempty'       => false,
           'compress'      => true,

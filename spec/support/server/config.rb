@@ -1,4 +1,4 @@
-shared_context 'zabbix::server::config' do
+shared_context 'zabbix::server::config' do |facts|
   it { should create_class('zabbix::server::config') }
   it { should contain_class('zabbix::server') }
 
@@ -170,36 +170,7 @@ shared_context 'zabbix::server::config' do
 
   it { should_not contain_logrotate__rule('zabbix-server') }
 
-  it 'File[/etc/logrotate.d/zabbix-server] should have valid contents' do
-    verify_contents(catalogue, '/etc/logrotate.d/zabbix-server', [
-      '/var/log/zabbixsrv/zabbix_server.log {',
-      '  compress',
-      '  create 0664 zabbixsrv zabbixsrv',
-      '  missingok',
-      '  monthly',
-      '  notifempty',
-      '}',
-    ])
-  end
-
-  context 'when use_logrotate_rule => true' do
-    let(:params) {{ :use_logrotate_rule => true }}
-
-    it 'should manage logrotate::rule[zabbix-server]' do
-      should contain_logrotate__rule('zabbix-server').with({
-        :path         => '/var/log/zabbixsrv/zabbix_server.log',
-        :missingok    => 'true',
-        :rotate_every => 'monthly',
-        :ifempty      => 'false',
-        :compress     => 'true',
-        :create       => 'true',
-        :create_mode  => '0664',
-        :create_owner => 'zabbixsrv',
-        :create_group => 'zabbixsrv',
-        :su           => 'false',
-      })
-    end
-
+  if facts[:operatingsystemmajrelease].to_i < 7
     it 'File[/etc/logrotate.d/zabbix-server] should have valid contents' do
       verify_contents(catalogue, '/etc/logrotate.d/zabbix-server', [
         '/var/log/zabbixsrv/zabbix_server.log {',
@@ -211,18 +182,7 @@ shared_context 'zabbix::server::config' do
         '}',
       ])
     end
-  end
-  context "when operatingsystemmajrelease == 7" do
-    let :facts do
-      {
-        :fqdn                       => 'foo.example.com',
-        :domain                     => 'example.com',
-        :osfamily                   => 'RedHat',
-        :root_home                  => '/root',
-        :operatingsystemmajrelease  => '7',
-      }
-    end
-
+  else
     it 'File[/etc/logrotate.d/zabbix-server] should have valid contents' do
       verify_contents(catalogue, '/etc/logrotate.d/zabbix-server', [
         '/var/log/zabbixsrv/zabbix_server.log {',
@@ -235,12 +195,39 @@ shared_context 'zabbix::server::config' do
         '}',
       ])
     end
+  end
 
-    it { should_not contain_logrotate__rule('zabbix-server') }
+  context 'when use_logrotate_rule => true' do
+    let(:params) {{ :use_logrotate_rule => true }}
 
-    context 'when use_logrotate_rule => true' do
-      let(:params) {{ :use_logrotate_rule => true }}
+    if facts[:operatingsystemmajrelease].to_i < 7
+      it 'should manage logrotate::rule[zabbix-server]' do
+        should contain_logrotate__rule('zabbix-server').with({
+          :path         => '/var/log/zabbixsrv/zabbix_server.log',
+          :missingok    => 'true',
+          :rotate_every => 'monthly',
+          :ifempty      => 'false',
+          :compress     => 'true',
+          :create       => 'true',
+          :create_mode  => '0664',
+          :create_owner => 'zabbixsrv',
+          :create_group => 'zabbixsrv',
+          :su           => 'false',
+        })
+      end
 
+      it 'File[/etc/logrotate.d/zabbix-server] should have valid contents' do
+        verify_contents(catalogue, '/etc/logrotate.d/zabbix-server', [
+          '/var/log/zabbixsrv/zabbix_server.log {',
+          '  compress',
+          '  create 0664 zabbixsrv zabbixsrv',
+          '  missingok',
+          '  monthly',
+          '  notifempty',
+          '}',
+        ])
+      end
+    else
       it 'should manage logrotate::rule[zabbix-server]' do
         should contain_logrotate__rule('zabbix-server').with({
           :path         => '/var/log/zabbixsrv/zabbix_server.log',
@@ -272,5 +259,4 @@ shared_context 'zabbix::server::config' do
       end
     end
   end
-
 end
