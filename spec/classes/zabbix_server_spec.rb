@@ -44,6 +44,9 @@ describe 'zabbix::server' do
       it { should contain_class('zabbix::server::service').that_comes_before('Anchor[zabbix::server::end]') }
       it { should contain_anchor('zabbix::server::end') }
 
+      it { should contain_class('zabbix::database::mysql').that_comes_before('Class[zabbix::web]') }
+      it { should contain_class('zabbix::web').that_comes_before('Class[zabbix::server::config]') }
+
       it "defines Class[zabbix::database::mysql]" do
         should contain_class('zabbix::database::mysql').only_with({
           :name             => 'Zabbix::Database::Mysql',
@@ -64,9 +67,6 @@ describe 'zabbix::server' do
         should contain_class('zabbix::web').only_with({
           :name                 => 'Zabbix::Web',
           :package_ensure       => 'present',
-          :manage_database      => 'false',
-          :export_database      => 'false',
-          :export_database_tag  => 'example.com',
           :db_type              => 'mysql',
           :package_name         => 'zabbix22-web-mysql',
           :db_host              => 'localhost',
@@ -84,6 +84,13 @@ describe 'zabbix::server' do
           :apache_group_name    => 'apache',
           :before               => 'Class[Zabbix::Server::Config]',
         })
+      end
+
+      context "when manage_database => false" do
+        let(:params) {{ :manage_database => false }}
+        it { should_not contain_class('zabbix::database::mysql') }
+        it { should contain_class('zabbix::server::install').that_comes_before('Class[zabbix::web]') }
+        it { should contain_class('zabbix::web').that_comes_before('Class[zabbix::server::config]') }
       end
 
       context "when manage_web => false" do
@@ -117,9 +124,31 @@ describe 'zabbix::server' do
       ].each do |p|
         context "when #{p} => 'foo'" do
           let(:params) {{ p => 'foo' }}
-          it { expect { should create_class('zabbix::server') }.to raise_error(Puppet::Error, /is not a boolean/) }
+          it 'should raise an error' do
+            expect { should compile }.to raise_error(/is not a boolean/)
+          end
         end
       end
+
+      # Test validate_hash parameters
+      [
+        :logrotate_defaults,
+      ].each do |p|
+        context "when #{p} => 'foo'" do
+          let(:params) {{ p => 'foo' }}
+          it 'should raise an error' do
+            expect { should compile }.to raise_error(/is not a Hash/)
+          end
+        end
+      end
+
+      context 'unsupported db_type' do
+        let(:params) {{ :db_type => 'foo' }}
+        it 'should raise an error' do
+          expect { should compile }.to raise_error(/does not match/)
+        end
+      end
+
     end
   end
 end

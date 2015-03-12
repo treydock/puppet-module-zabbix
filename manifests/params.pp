@@ -14,9 +14,6 @@ class zabbix::params {
 
   # Database defaults
   $manage_database      = true
-  $web_manage_dabase    = false
-  $web_export_database  = false
-  $export_database_tag  = $::domain
   $db_type              = 'mysql'
   $db_host              = 'localhost'
   $db_name              = 'zabbix'

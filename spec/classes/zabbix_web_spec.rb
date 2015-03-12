@@ -85,55 +85,12 @@ describe 'zabbix::web' do
         ])
       end
 
-      it { should_not contain_class('mysql::server') }
-      it { should have_mysql__db_resource_count(0) }
-      it { should_not contain_mysql__db('zabbix') }
-
-      context "when manage_database => true" do
-        let(:params) {{ :manage_database => true }}
-
-        it { should contain_class('mysql::server') }
-
-        it "should create mysql::db" do
-          should contain_mysql__db('zabbix').with({
-            :ensure       => 'present',
-            :user         => 'zabbix',
-            :password     => 'changeme',
-            :dbname       => 'zabbix',
-            :host         => 'localhost',
-            :charset      => 'utf8',
-            :collate      => 'utf8_bin',
-            :grant        => ['ALL'],
-          })
-        end
-      end
-
       context 'when using remote zabbix and database' do
         let(:params) do
           {
-            :export_database => true,
             :db_host => 'db.example.com',
             :zabbix_server => 'zabbix.example.com',
           }
-        end
-
-        it { should_not contain_class('mysql::server') }
-
-        it { should have_mysql__db_resource_count(0) }
-
-        it "should export mysql::db" do
-          skip("Can not test exported resources")
-          should contain_mysql__db('zabbix_foo.example.com').with({
-            :ensure       => 'present',
-            :user         => 'zabbix',
-            :password     => 'changeme',
-            :dbname       => 'zabbix',
-            :host         => 'foo.example.com',
-            :charset      => 'utf8',
-            :collate      => 'utf8_bin',
-            :grant        => ['ALL'],
-            :tag          => 'example.com',
-          })
         end
 
         it "should create valid contents for zabbix.conf.php" do

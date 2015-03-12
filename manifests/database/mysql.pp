@@ -29,6 +29,12 @@ class zabbix::database::mysql (
     }
   }
 
+  $sql_imports = [
+    $schema_sql_path,
+    $images_sql_path,
+    $data_sql_path,
+  ]
+
   package { 'zabbix-dbfiles-mysql':
     ensure  => $package_ensure,
     name    => $package_name,
@@ -45,26 +51,7 @@ class zabbix::database::mysql (
     charset  => 'utf8',
     collate  => 'utf8_bin',
     grant    => ['ALL'],
-    notify   => Exec['zabbix-schema-import'],
-  }
-
-  exec { 'zabbix-schema-import':
-    command     => "/usr/bin/mysql ${db_name} < ${schema_sql_path}",
-    logoutput   => true,
-    environment => "HOME=${::root_home}",
-    refreshonly => true,
-  }~>
-  exec { 'zabbix-images-import':
-    command     => "/usr/bin/mysql ${db_name} < ${images_sql_path}",
-    logoutput   => true,
-    environment => "HOME=${::root_home}",
-    refreshonly => true,
-  }~>
-  exec { 'zabbix-data-import':
-    command     => "/usr/bin/mysql ${db_name} < ${data_sql_path}",
-    logoutput   => true,
-    environment => "HOME=${::root_home}",
-    refreshonly => true,
+    sql      => $sql_imports,
   }
 
 }

@@ -71,9 +71,37 @@ describe 'zabbix::agent' do
       ].each do |p|
         context "when #{p} => 'foo'" do
           let(:params) {{ p => 'foo' }}
-          it { expect { should create_class('zabbix::agent') }.to raise_error(Puppet::Error, /is not a boolean/) }
+          it 'should raise an error' do
+            expect { should compile }.to raise_error(/is not a boolean/)
+          end
         end
       end
+
+      # Test validate_array parameters
+      [
+        :servers,
+        :listen_ip,
+      ].each do |p|
+        context "when #{p} => 'foo'" do
+          let(:params) {{ p => 'foo' }}
+          it 'should raise an error' do
+            expect { should compile }.to raise_error(/is not an Array/)
+          end
+        end
+      end
+
+      # Test validate_hash parameters
+      [
+        :logrotate_defaults,
+      ].each do |p|
+        context "when #{p} => 'foo'" do
+          let(:params) {{ p => 'foo' }}
+          it 'should raise an error' do
+            expect { should compile }.to raise_error(/is not a Hash/)
+          end
+        end
+      end
+
     end
   end
 end

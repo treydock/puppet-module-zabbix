@@ -26,8 +26,6 @@ class zabbix::server (
   $data_sql_path              = $::zabbix::params::data_sql_paths['mysql'],
   # Web
   $manage_web                 = $::zabbix::params::manage_web,
-  $web_export_database        = $::zabbix::params::web_export_database,
-  $export_database_tag        = $::zabbix::params::export_database_tag,
   $web_package_name           = $::zabbix::params::web_packages[$db_type],
   $zabbix_server_name         = $::zabbix::params::zabbix_server_name,
   $image_format_default       = $::zabbix::params::image_format_default,
@@ -138,14 +136,18 @@ class zabbix::server (
   }
 
   if $manage_web {
-    Class["zabbix::database::${db_type}"]->
-    Class['zabbix::web']->
-    Class['zabbix::server::config']
+    if $manage_database {
+      Class["zabbix::database::${db_type}"]->
+      Class['zabbix::web']->
+      Class['zabbix::server::config']
+    } else {
+      Class['zabbix::server::install']->
+      Class['zabbix::web']->
+      Class['zabbix::server::config']
+    }
 
     class { 'zabbix::web':
       package_ensure       => $package_ensure,
-      manage_database      => false,
-      export_database      => $web_export_database,
       db_type              => $db_type,
       package_name         => $web_package_name,
       db_host              => $db_host,

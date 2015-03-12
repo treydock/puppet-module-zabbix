@@ -55,36 +55,11 @@ describe 'zabbix::database::mysql' do
           :charset      => 'utf8',
           :collate      => 'utf8_bin',
           :grant        => ['ALL'],
-          :notify       => 'Exec[zabbix-schema-import]',
-        })
-      end
-
-      it "should import schema.sql" do
-        should contain_exec('zabbix-schema-import').with({
-          :command      => '/usr/bin/mysql zabbix < /usr/share/zabbix-mysql/schema.sql',
-          :logoutput    => 'true',
-          :environment  => 'HOME=/root',
-          :refreshonly  => 'true',
-          :notify       => 'Exec[zabbix-images-import]',
-        })
-      end
-
-      it "should import images.sql" do
-        should contain_exec('zabbix-images-import').with({
-          :command      => '/usr/bin/mysql zabbix < /usr/share/zabbix-mysql/images.sql',
-          :logoutput    => 'true',
-          :environment  => 'HOME=/root',
-          :refreshonly  => 'true',
-          :notify       => 'Exec[zabbix-data-import]',
-        })
-      end
-
-      it "should import data.sql" do
-        should contain_exec('zabbix-data-import').with({
-          :command      => '/usr/bin/mysql zabbix < /usr/share/zabbix-mysql/data.sql',
-          :logoutput    => 'true',
-          :environment  => 'HOME=/root',
-          :refreshonly  => 'true',
+          :sql          => [
+            '/usr/share/zabbix-mysql/schema.sql',
+            '/usr/share/zabbix-mysql/images.sql',
+            '/usr/share/zabbix-mysql/data.sql',
+          ],
         })
       end
     end
