@@ -3,23 +3,28 @@
 # Public class
 #
 class zabbix::web (
+  # Package
   $package_ensure       = 'present',
+  $package_name         = $::zabbix::params::web_packages[$db_type],
+  # Database
   $manage_database      = $::zabbix::params::web_manage_dabase,
   $export_database      = $::zabbix::params::web_export_database,
   $export_database_tag  = $::zabbix::params::export_database_tag,
   $db_type              = $::zabbix::params::db_type,
-  $package_name         = $::zabbix::params::web_packages[$db_type],
   $db_host              = $::zabbix::params::db_host,
   $db_port              = $::zabbix::params::db_port,
   $db_name              = $::zabbix::params::db_name,
   $db_user              = $::zabbix::params::db_user,
   $db_password          = $::zabbix::params::db_password,
+  # Config values
   $zabbix_server        = '127.0.0.1',
   $zabbix_server_port   = $::zabbix::params::server_listen_port,
   $zabbix_server_name   = $::zabbix::params::zabbix_server_name,
   $image_format_default = $::zabbix::params::image_format_default,
+  # Config locations
   $config_dir           = $::zabbix::params::web_config_dir,
   $config_file          = $::zabbix::params::web_config_file,
+  # Apache
   $apache_user_name     = $::zabbix::params::apache_user_name,
   $apache_group_name    = $::zabbix::params::apache_group_name,
 ) inherits zabbix::params {

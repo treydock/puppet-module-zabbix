@@ -3,15 +3,18 @@
 # Public class
 #
 class zabbix::database::mysql (
-  $package_ensure = 'present',
-  $package_name = $::zabbix::params::database_packages['mysql'],
-  $zabbix_server = $::zabbix::params::db_host,
-  $db_name = $::zabbix::params::db_name,
-  $db_user = $::zabbix::params::db_user,
-  $db_password = $::zabbix::params::db_password,
-  $schema_sql_path = $::zabbix::params::schema_sql_paths['mysql'],
-  $images_sql_path = $::zabbix::params::images_sql_paths['mysql'],
-  $data_sql_path = $::zabbix::params::data_sql_paths['mysql'],
+  # Package
+  $package_ensure   = 'present',
+  $package_name     = $::zabbix::params::database_packages['mysql'],
+  # Config values
+  $zabbix_server    = $::zabbix::params::db_host,
+  $db_name          = $::zabbix::params::db_name,
+  $db_user          = $::zabbix::params::db_user,
+  $db_password      = $::zabbix::params::db_password,
+  # Config locations
+  $schema_sql_path  = $::zabbix::params::schema_sql_paths['mysql'],
+  $images_sql_path  = $::zabbix::params::images_sql_paths['mysql'],
+  $data_sql_path    = $::zabbix::params::data_sql_paths['mysql'],
 ) inherits zabbix::params {
 
   include ::mysql::server

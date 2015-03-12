@@ -3,20 +3,25 @@
 # Public class
 #
 class zabbix::agent (
+  # User / Group
   $manage_user                = $::zabbix::params::agent_manage_user,
   $user_uid                   = $::zabbix::params::agent_user_uid,
   $user_home_dir              = $::zabbix::params::agent_user_home_dir,
   $group_gid                  = $::zabbix::params::agent_group_gid,
+  # Package
   $package_ensure             = 'present',
   $package_name               = $::zabbix::params::agent_package_name,
+  # Config locations
   $config_d_dir               = $::zabbix::params::agent_config_d_dir,
   $purge_config_d_dir         = true,
   $config_file                = $::zabbix::params::agent_config_file,
   $scripts_dir                = $::zabbix::params::agent_scripts_dir,
+  # Logrotate
   $manage_logrotate           = $::zabbix::params::agent_manage_logrotate,
   $logrotate_defaults         = $::zabbix::params::agent_logrotate_defaults,
   $use_logrotate_rule         = $::zabbix::params::agent_use_logrotate_rule,
   $logrotate_every            = $::zabbix::params::agent_logrotate_every,
+  # Config values
   $servers                    = $::zabbix::params::servers,
   $listen_port                = $::zabbix::params::agent_listen_port,
   $log_dir                    = $::zabbix::params::agent_log_dir,
@@ -35,8 +40,11 @@ class zabbix::agent (
   $timeout                    = $::zabbix::params::agent_config_defaults['timeout'],
   $allow_root                 = $::zabbix::params::agent_config_defaults['allow_root'],
   $unsafe_user_parameters     = $::zabbix::params::agent_config_defaults['unsafe_user_parameters'],
+  # Service
   $service_name               = $::zabbix::params::agent_service_name,
+  # Firewall
   $manage_firewall            = true,
+  # Sudo
   $manage_sudo                = true,
   $sudo_ensure                = 'present',
   $sudo_priority              = 10,

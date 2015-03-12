@@ -3,15 +3,17 @@
 # Public class
 #
 class zabbix::server (
-  $db_type                    = $::zabbix::params::db_type,
+  # User / Group
   $manage_user                = $::zabbix::params::server_manage_user,
   $user_uid                   = $::zabbix::params::server_user_uid,
   $user_home_dir              = $::zabbix::params::server_user_home_dir,
   $group_gid                  = $::zabbix::params::server_group_gid,
+  # Package
   $package_ensure             = 'present',
   $package_name               = $::zabbix::params::server_packages[$db_type],
-  # database
+  # Database
   $manage_database            = $::zabbix::params::manage_database,
+  $db_type                    = $::zabbix::params::db_type,
   $database_package_name      = $::zabbix::params::database_packages[$db_type],
   $db_host                    = $::zabbix::params::db_host,
   $db_name                    = $::zabbix::params::db_name,
@@ -22,7 +24,7 @@ class zabbix::server (
   $schema_sql_path            = $::zabbix::params::schema_sql_paths[$db_type],
   $images_sql_path            = $::zabbix::params::images_sql_paths['mysql'],
   $data_sql_path              = $::zabbix::params::data_sql_paths['mysql'],
-  # web
+  # Web
   $manage_web                 = $::zabbix::params::manage_web,
   $web_export_database        = $::zabbix::params::web_export_database,
   $export_database_tag        = $::zabbix::params::export_database_tag,
@@ -33,14 +35,16 @@ class zabbix::server (
   $web_config_file            = $::zabbix::params::web_config_file,
   $apache_user_name           = $::zabbix::params::apache_user_name,
   $apache_group_name          = $::zabbix::params::apache_group_name,
-  # zabbix-server
+  # Config locations
   $config_d_dir               = $::zabbix::params::server_config_d_dir,
   $purge_config_d_dir         = true,
   $config_file                = $::zabbix::params::server_config_file,
+  # Logrotate
   $manage_logrotate           = $::zabbix::params::server_manage_logrotate,
   $logrotate_defaults         = $::zabbix::params::server_logrotate_defaults,
   $use_logrotate_rule         = $::zabbix::params::server_use_logrotate_rule,
   $logrotate_every            = $::zabbix::params::server_logrotate_every,
+  # Config values
   $listen_port                = $::zabbix::params::server_listen_port,
   $log_dir                    = $::zabbix::params::server_log_dir,
   $log_file                   = $::zabbix::params::server_log_file,
@@ -73,7 +77,9 @@ class zabbix::server (
   $unreachable_period         = $::zabbix::params::server_config_defaults['unreachable_period'],
   $unavailable_delay          = $::zabbix::params::server_config_defaults['unavailable_delay'],
   $unreachable_delay          = $::zabbix::params::server_config_defaults['unreachable_delay'],
+  # Service
   $service_name               = $::zabbix::params::server_service_name,
+  # Firewall
   $manage_firewall            = true,
 ) inherits zabbix::params {
 
