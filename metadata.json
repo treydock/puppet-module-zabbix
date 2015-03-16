@@ -23,6 +23,16 @@
       "operatingsystemrelease": [ "5", "6", "7" ]
     }
   ],
+  "requirements": [
+    {
+      "name": "pe",
+      "version_requirement": "3.x"
+    },
+    {
+      "name": "puppet",
+      "version_requirement": "3.x"
+    }
+  ],
   "dependencies": [
     {
       "name": "puppetlabs-stdlib",
