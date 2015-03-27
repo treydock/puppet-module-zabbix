@@ -3,6 +3,7 @@
 # The zabbix default configuration settings.
 #
 class zabbix::params {
+  $version            = '2.2'
 
   # User / Group defaults
   $agent_manage_user  = true
@@ -93,7 +94,10 @@ class zabbix::params {
       $agent_log_file             = "${agent_log_dir}/zabbix_agentd.log"
       $agent_pid_dir              = '/var/run/zabbix'
       $agent_pid_file             = "${agent_pid_dir}/zabbix_agentd.pid"
-      $agent_package_name         = 'zabbix22-agent'
+      $agent_package_name         = {
+        '2.0' => 'zabbix20-agent',
+        '2.2' => 'zabbix22-agent',
+      }
       $agent_service_name         = 'zabbix-agent'
 
       # server defaults
@@ -117,14 +121,28 @@ class zabbix::params {
 
       # Defaults that depend on db_type
       $server_packages            = {
-        'mysql'   => 'zabbix22-server-mysql',
-        #'pgsql'   => 'zabbix22-server-pgsql',
-        #'sqlite'  => 'zabbix22-server-sqlite3',
+        '2.0' => {
+          'mysql'   => 'zabbix20-server-mysql',
+          #'pgsql'   => 'zabbix20-server-pgsql',
+          #'sqlite'  => 'zabbix20-server-sqlite3',
+        },
+        '2.2' => {
+          'mysql'   => 'zabbix22-server-mysql',
+          #'pgsql'   => 'zabbix22-server-pgsql',
+          #'sqlite'  => 'zabbix22-server-sqlite3',
+        }
       }
       $database_packages          = {
-        'mysql'   => 'zabbix22-dbfiles-mysql',
-        #'pgsql'   => 'zabbix22-dbfiles-pgsql',
-        #'sqlite'  => 'zabbix22-dbfiles-sqlite3',
+        '2.0' => {
+          'mysql'   => false,
+          #'pgsql'   => undef,
+          #'sqlite'  => undef,
+        },
+        '2.2' => {
+          'mysql'   => 'zabbix22-dbfiles-mysql',
+          #'pgsql'   => 'zabbix22-dbfiles-pgsql',
+          #'sqlite'  => 'zabbix22-dbfiles-sqlite3',
+        }
       }
       $schema_sql_paths           = {
         'mysql'   => '/usr/share/zabbix-mysql/schema.sql',
@@ -136,7 +154,12 @@ class zabbix::params {
         'mysql'   => '/usr/share/zabbix-mysql/data.sql',
       }
       $web_packages               = {
-        'mysql'   => 'zabbix22-web-mysql',
+        '2.0' => {
+          'mysql'   => 'zabbix20-web-mysql',
+        },
+        '2.2' => {
+          'mysql'   => 'zabbix22-web-mysql',
+        }
       }
 
       if versioncmp($::operatingsystemmajrelease, '7') >= 0 {

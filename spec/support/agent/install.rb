@@ -10,4 +10,12 @@ shared_context 'zabbix::agent::install' do
       :require  => 'Yumrepo[epel]',
     })
   end
+
+  context 'when version is 2.0' do
+    let(:params) {{ :version => '2.0' }}
+
+    it 'should install zabbix20-agent' do
+      should contain_package('zabbix::agent').with_name('zabbix20-agent')
+    end
+  end
 end

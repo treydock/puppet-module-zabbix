@@ -3,6 +3,8 @@
 # Public class
 #
 class zabbix::agent (
+  # Version support
+  $version                    = $::zabbix::params::version,
   # User / Group
   $manage_user                = $::zabbix::params::agent_manage_user,
   $user_uid                   = $::zabbix::params::agent_user_uid,
@@ -10,7 +12,7 @@ class zabbix::agent (
   $group_gid                  = $::zabbix::params::agent_group_gid,
   # Package
   $package_ensure             = 'present',
-  $package_name               = $::zabbix::params::agent_package_name,
+  $package_name               = undef,
   # Config locations
   $config_d_dir               = $::zabbix::params::agent_config_d_dir,
   $purge_config_d_dir         = true,
@@ -63,9 +65,12 @@ class zabbix::agent (
   validate_array($servers)
   validate_array($listen_ip)
 
+  validate_re($version, ['^2.0', '^2.2'])
   validate_re($sudo_ensure, ['^present$', '^absent$'])
 
   validate_hash($logrotate_defaults)
+
+  $package_name_real = pick($package_name, $::zabbix::params::agent_package_name[$version])
 
   $logrotate_local_params = {
     'path'          => $log_file,

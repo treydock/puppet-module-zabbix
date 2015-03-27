@@ -50,6 +50,7 @@ describe 'zabbix::server' do
       it "defines Class[zabbix::database::mysql]" do
         should contain_class('zabbix::database::mysql').only_with({
           :name             => 'Zabbix::Database::Mysql',
+          :version          => '2.2',
           :package_ensure   => 'present',
           :package_name     => 'zabbix22-dbfiles-mysql',
           :zabbix_server    => 'localhost',
@@ -66,6 +67,7 @@ describe 'zabbix::server' do
       it "defines Class[zabbix::web]" do
         should contain_class('zabbix::web').only_with({
           :name                 => 'Zabbix::Web',
+          :version              => '2.2',
           :package_ensure       => 'present',
           :db_type              => 'mysql',
           :package_name         => 'zabbix22-web-mysql',
@@ -139,6 +141,13 @@ describe 'zabbix::server' do
           it 'should raise an error' do
             expect { should compile }.to raise_error(/is not a Hash/)
           end
+        end
+      end
+
+      context 'unsupported version' do
+        let(:params) {{ :version => '1.8' }}
+        it 'should raise an error' do
+          expect { should compile }.to raise_error(/does not match/)
         end
       end
 

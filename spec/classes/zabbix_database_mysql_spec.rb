@@ -62,6 +62,21 @@ describe 'zabbix::database::mysql' do
           ],
         })
       end
+
+      context 'when version is 2.0' do
+        let(:params) {{ :version => '2.0' }}
+
+        it 'should not contain dbfiles package' do
+          should_not contain_package('zabbix-dbfiles-mysql')
+        end
+      end
+
+      context 'unsupported version' do
+        let(:params) {{ :version => '1.8' }}
+        it 'should raise an error' do
+          expect { should compile }.to raise_error(/does not match/)
+        end
+      end
     end
   end
 end

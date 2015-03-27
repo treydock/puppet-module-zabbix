@@ -3,6 +3,8 @@
 # Public class
 #
 class zabbix::server (
+  # Version support
+  $version                    = $::zabbix::params::version,
   # User / Group
   $manage_user                = $::zabbix::params::server_manage_user,
   $user_uid                   = $::zabbix::params::server_user_uid,
@@ -10,11 +12,11 @@ class zabbix::server (
   $group_gid                  = $::zabbix::params::server_group_gid,
   # Package
   $package_ensure             = 'present',
-  $package_name               = $::zabbix::params::server_packages[$db_type],
+  $package_name               = undef,
   # Database
   $manage_database            = $::zabbix::params::manage_database,
   $db_type                    = $::zabbix::params::db_type,
-  $database_package_name      = $::zabbix::params::database_packages[$db_type],
+  $database_package_name      = undef,
   $db_host                    = $::zabbix::params::db_host,
   $db_name                    = $::zabbix::params::db_name,
   $db_user                    = $::zabbix::params::db_user,
@@ -26,7 +28,7 @@ class zabbix::server (
   $data_sql_path              = $::zabbix::params::data_sql_paths['mysql'],
   # Web
   $manage_web                 = $::zabbix::params::manage_web,
-  $web_package_name           = $::zabbix::params::web_packages[$db_type],
+  $web_package_name           = undef,
   $zabbix_server_name         = $::zabbix::params::zabbix_server_name,
   $image_format_default       = $::zabbix::params::image_format_default,
   $web_config_dir             = $::zabbix::params::web_config_dir,
@@ -90,10 +92,15 @@ class zabbix::server (
   validate_bool($start_snmp_trapper)
   validate_bool($manage_firewall)
 
+  validate_re($version, ['^2.0', '^2.2'])
   #validate_re($db_type, ['^mysql$','^pgsql$','^sqlite$'])
   validate_re($db_type, ['^mysql$'])
 
   validate_hash($logrotate_defaults)
+
+  $package_name_real = pick($package_name, $::zabbix::params::server_packages[$version][$db_type])
+  $database_package_name_real = pick($database_package_name, $::zabbix::params::database_packages[$version][$db_type])
+  $web_package_name_real = pick($web_package_name, $::zabbix::params::web_packages[$version][$db_type])
 
   $logrotate_local_params = {
     'path'          => $log_file,
@@ -106,8 +113,9 @@ class zabbix::server (
 
   if $manage_database {
     class { "zabbix::database::${db_type}":
+      version         => $version,
       package_ensure  => $package_ensure,
-      package_name    => $database_package_name,
+      package_name    => $database_package_name_real,
       zabbix_server   => $db_host,
       db_name         => $db_name,
       db_user         => $db_user,
@@ -147,9 +155,10 @@ class zabbix::server (
     }
 
     class { 'zabbix::web':
+      version              => $version,
       package_ensure       => $package_ensure,
       db_type              => $db_type,
-      package_name         => $web_package_name,
+      package_name         => $web_package_name_real,
       db_host              => $db_host,
       db_port              => $db_port,
       db_name              => $db_name,

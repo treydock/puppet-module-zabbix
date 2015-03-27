@@ -3,9 +3,11 @@
 # Public class
 #
 class zabbix::web (
+  # Version support
+  $version              = $::zabbix::params::version,
   # Package
   $package_ensure       = 'present',
-  $package_name         = $::zabbix::params::web_packages[$db_type],
+  $package_name         = undef,
   # Database
   $db_type              = $::zabbix::params::db_type,
   $db_host              = $::zabbix::params::db_host,
@@ -26,6 +28,10 @@ class zabbix::web (
   $apache_group_name    = $::zabbix::params::apache_group_name,
 ) inherits zabbix::params {
 
+  validate_re($version, ['^2.0', '^2.2'])
+
+  $package_name_real = pick($package_name, $::zabbix::params::web_packages[$version][$db_type])
+
   case $::osfamily {
     'RedHat': {
       include ::epel
@@ -38,7 +44,7 @@ class zabbix::web (
 
   package { 'zabbix-web':
     ensure  => $package_ensure,
-    name    => $package_name,
+    name    => $package_name_real,
     require => $package_require,
     before  => File['/etc/zabbix/web'],
   }

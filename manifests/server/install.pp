@@ -18,7 +18,7 @@ class zabbix::server::install {
 
   package { 'zabbix-server':
     ensure  => $::zabbix::server::package_ensure,
-    name    => $::zabbix::server::package_name,
+    name    => $::zabbix::server::package_name_real,
     require => $package_require,
   }
 

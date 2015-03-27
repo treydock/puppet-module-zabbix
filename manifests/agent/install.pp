@@ -18,7 +18,7 @@ class zabbix::agent::install {
 
   package { 'zabbix::agent':
     ensure  => $::zabbix::agent::package_ensure,
-    name    => $::zabbix::agent::package_name,
+    name    => $::zabbix::agent::package_name_real,
     require => $package_require,
   }
 

@@ -280,6 +280,14 @@ shared_context 'zabbix::agent::config' do |facts|
     })
   end
 
+  context 'when version is 2.0' do
+    let(:params) {{ :version => '2.0' }}
+
+    it 'agent config should not contain HostMetadata' do
+      should_not contain_file('/etc/zabbix_agentd.conf').with_content(/^HostMetadata.*/)
+    end
+  end
+
   context 'when manage_sudo => false' do
     let(:params) {{ :manage_sudo => false }}
     it { should_not contain_datacat('zabbix-agent-sudo') }

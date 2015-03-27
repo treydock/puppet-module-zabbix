@@ -24,8 +24,10 @@ StartAgents=<%= scope.lookupvar('zabbix::agent::start_agents') %>
 ServerActive=<%= scope.lookupvar('zabbix::agent::servers').join(',') %>
 Hostname=<%= @fqdn %>
 # HostnameItem=system.hostname
+<% if scope.lookupvar('zabbix::agent::version') >= '2.2' -%>
 HostMetadata=<%= scope.lookupvar('zabbix::agent::host_metadata') %>
 # HostMetadataItem=
+<% end -%>
 RefreshActiveChecks=<%= scope.lookupvar('zabbix::agent::refresh_active_checks') %>
 BufferSend=<%= scope.lookupvar('zabbix::agent::buffer_send') %>
 BufferSize=<%= scope.lookupvar('zabbix::agent::buffer_size') %>

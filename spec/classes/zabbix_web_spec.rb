@@ -112,6 +112,21 @@ describe 'zabbix::web' do
           ])
         end
       end
+
+      context 'when version is 2.0' do
+        let(:params) {{ :version => '2.0' }}
+
+        it 'should install zabbix20-web-mysql' do
+          should contain_package('zabbix-web').with_name('zabbix20-web-mysql')
+        end
+      end
+
+      context 'unsupported version' do
+        let(:params) {{ :version => '1.8' }}
+        it 'should raise an error' do
+          expect { should compile }.to raise_error(/does not match/)
+        end
+      end
     end
   end
 end

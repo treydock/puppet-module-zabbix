@@ -3,6 +3,8 @@
 # Public class
 #
 class zabbix::database::mysql (
+  # Version support
+  $version          = $::zabbix::params::version,
   # Package
   $package_ensure   = 'present',
   $package_name     = $::zabbix::params::database_packages['mysql'],
@@ -17,7 +19,11 @@ class zabbix::database::mysql (
   $data_sql_path    = $::zabbix::params::data_sql_paths['mysql'],
 ) inherits zabbix::params {
 
+  validate_re($version, ['^2.0', '^2.2'])
+
   include ::mysql::server
+
+  $package_name_real = pick($package_name, $::zabbix::params::database_packages[$version]['mysql'])
 
   case $::osfamily {
     'RedHat': {
@@ -35,11 +41,13 @@ class zabbix::database::mysql (
     $data_sql_path,
   ]
 
-  package { 'zabbix-dbfiles-mysql':
-    ensure  => $package_ensure,
-    name    => $package_name,
-    require => $package_require,
-    before  => Mysql::Db['zabbix'],
+  if $package_name_real {
+    package { 'zabbix-dbfiles-mysql':
+      ensure  => $package_ensure,
+      name    => $package_name_real,
+      require => $package_require,
+      before  => Mysql::Db['zabbix'],
+    }
   }
 
   mysql::db { 'zabbix':

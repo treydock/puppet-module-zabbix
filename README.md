@@ -78,6 +78,8 @@ This module has been tested on:
 * CentOS 6.5 x86_64
 * CentOS 7.0 x86_64
 
+Due to Zabbix 2.0 in EPEL not containing a package specific to the database files, the management of a Zabbix database on a separate host from the Zabbix Server is not supported using this module when `$version` is `2.0`.
+
 ## Development
 
 ### Testing

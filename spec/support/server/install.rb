@@ -10,4 +10,12 @@ shared_context 'zabbix::server::install' do
       :require  => 'Yumrepo[epel]',
     })
   end
+
+  context 'when version is 2.0' do
+    let(:params) {{ :version => '2.0' }}
+
+    it 'should install zabbix20-server-mysql' do
+      should contain_package('zabbix-server').with_name('zabbix20-server-mysql')
+    end
+  end
 end
